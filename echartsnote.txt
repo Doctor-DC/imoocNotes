@@ -1,0 +1,7 @@
+1.饼图展示数据的特点：
+——展示百分比
+——Type是pie
+2.center圆心坐标
+3.radius半径
+4.name图例名字
+5.selectMode是否支持多选

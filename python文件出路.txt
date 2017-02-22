@@ -1,0 +1,176 @@
+#encoding: utf-8  
+import sys  
+reload(sys)  
+sys.setdefaultencoding('utf8')  
+read 读取文件 参数为字节 默认读取全部
+readline 读取一行
+readlines 读取文件，返回每一行所组成的列表
+
+writes（str）字符串写入文件
+writelins 写多行到文件
+f.write() --> 缓存
+缓存 --> f.close() --> 磁盘
+
+if Write_file_size > buf:
+    则会先与磁盘同步一次
+    剩余的则又存储在缓存中
+
+Python文件为什么要关闭
+1：将写缓存同步到磁盘；
+2：linux系统中每个进程打开的文件个数是有限的；
+3：如果打开文件数到了系统限制，在打开文件就会失败；
+import os
+f.seek(0, SEEK_END)
+f.seek(2, SEEK_END)
+f.seek(1, SEEK_SET)
+f.seek(-1, SEEL_CUR)
+
+f.tell()（函数）返回当前文件的偏移
+
+返回的是一个整数，也许是一个长整数
+
+file.fileno():文件描述符；
+file.mode:文件打开权限
+file.encoding:文件编码格式
+file.closed:文件是否关闭
+
+
+import sys
+文件标准输入：sys.stdin；
+文件标准输出：sys.stdout；
+文件标准错误：sys.stderr;
+type(sys.stdin) --> file && class
+
+
+sys.argv
+-v输入不同参数
+
+a =unicode.encode(u'慕课','utf-8')
+
+我们可以用codecs模块提供方法创建制定编码格式文件.
+open('test/txt','w','utf-8')
+open(fname,mode,encoding,errors,buffering):
+使用指定编码格式打开文件
+
+
+
+sys模块提供sys.argv属性,通过该属性可以得到命令行参数;sys.argv:字符串组成的列表
+raw_input（）该函数是从命令行接受输入
+
+
+linux文件系统
+所有设备都可以看为文件
+
+python操作文件
+
+得到文件对象
+打开文件得到文件描述符
+对应文件驱动
+硬件设备
+
+os模块对文件进行操作
+
+os.open(filename, flag [,mode]):打开文件
+os.O_CREAT:创建文件
+os.O_RDONLY:只读方式打开
+os.O_WRONLY:只写方式打开
+os.O_RDWR:读写方式打开
+
+os.read(fd, buffersize):读取文件
+os.write(fd, string):写入文件
+os.lseek(fd, pos, how): 文件指针操作
+os.close(fd):关闭文件
+
+
+os.access(path, mode)： F_OK, R_OK ,W_OK, X_OK
+os.listdir(path)： 返回当path路径下所有文件名组成的列表
+os.remove(path)：删除文件
+os.rename(old, new)：修改文件或者目录名
+os.mkdir(path[, mode])：创建目录
+os.makedirs(path[, mode])：创建多级目录
+os.removedirs(path)：删除多级目录
+os.rmdir(path)：删除目录(目录必须空目录)
+
+os.path方法
+os.path.exists(path)：当前路径是否存在   |  也可以判断是否有该文件
+os.path.isdir(s)：是否是一个目录
+os.path.isfile(path)：是否是一个文件
+os.path.getsize(filename)：返回文件大小  | 返回目录文件大小
+os.path.dirname(p)返回路径的目录
+os.path.basename(p)返回路径的文件名
+
+
+ini配置文件格式：
+
+节： [session]
+参数(键=值)  name=value
+
+[port]
+	port1 = 800
+	port2 = 900
+
+ConfigParser
+
+cfg = ConfigParser.ConfigParser()
+
+cfg.read('imooc.txt')
+
+cfg.sections()
+
+for se in cfg.sections():
+	print se
+	print cfg.items(se)
+
+cg.set('userinfo','email','user@imooc.com')
+
+cfg.remove_option('user info','email')
+
+
+import ConfigParser   模块
+cfg = ConfigParser.ConfigParser()
+cfg.read('imooc.txt')
+cfg.sections()
+
+for se in cfg.sections():
+    print se
+    print cfg.items(se)
+
+cfg.set('userinfo', 'pwd', '1234567')  //改变userinfo键值对的值
+
+cfg.remove_option('userinfo', 'email') //删除键值
+
+python 文件练习
+In [5]: import ConfigParser
+In [6]: cfg = ConfigParser.ConfigParser()
+In [7]: help(cfg.read)
+In [8]: cat imooc.txt     #配置文件格式
+[userinfo]
+name = johntian
+pwd = abc
+
+[study]
+python_base = 15
+python_junior = 20
+linux_base_ = 15
+In [9]: cfg.read('imooc.txt')      #读取配置文件内容
+Out[9]: ['imooc.txt']
+In [10]: help(cfg.sections)
+In [12]: cfg.sections()     #打印节
+Out[12]: ['userinfo', 'study']
+In [13]: help(cfg.items)
+In [14]: for se in cfg.sections():     #遍历输出键值
+    ...:     print se
+    ...:     print cfg.items(se)
+    ...:     
+userinfo
+[('name', 'johntian'), ('pwd', 'abc')]
+study
+[('python_base', '15'), ('python_junior', '20'), ('linux_base_', '15')]
+In [15]: cfg.set('userinfo', 'pwd', '1234567')     #修改键值
+In [17]: cfg.set('userinfo', 'email', 'user@imooc.com')     #增加键、值
+In [19]: cfg.remove_option('userinfo', 'email')     #删除键、值
+Out[19]: True
+
+
+
+

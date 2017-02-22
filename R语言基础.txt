@@ -1,0 +1,465 @@
+数据结构：
+五种基本数据类型：
+字符
+数值
+整数
+复数
+逻辑
+
+class(x)
+查看x的类型
+x <- 2L
+指定整数int使用L
+尽量使用<-
+
+R语言大小写敏感
+
+> x <- 1
+> x
+[1] 1
+> x = 1
+> x
+[1] 1
+> class(x)
+[1] "numeric"
+> x
+[1] 1
+> x = 3.14
+> class(x)
+[1] "numeric"
+> x <- 1
+> x <- 2L
+> class(x)
+[1] "integer"
+> y <- "hello world"
+> class(y)
+[1] "character"
+> t <- TRUE
+> class(t)
+[1] "logical"
+> x <- 1+2i
+> class(x)
+[1] "complex"
+
+属性：
+名称：name
+维度：dimensions：matrix，array
+类型：class
+长度：length
+
+R语言基础向量：
+向量(vector):
+--只能包含同一种类型的对象
+
+x <- vector("character",length = 10)
+
+#vector
+
+x <- vector("character",length = 10)
+
+x1 <- 1:4
+#创建向量的c方法
+x2 <- c(1,2,3,4)
+
+x3 <- c(TRUE,10,"a")
+
+x4 <- c("a","b","c")
+#强制类型转换
+as.numeric(x4)
+as.logical()
+as.character()
+
+class(x1)
+#给向量加上名字。注意维度一致
+names(x1) <- c("a","b","c","d")
+
+矩阵(matrix)
+--向量+维度属性(整数向量：nrow,ncol)
+
+#Matrix & Array
+x <- matrix(1:6,nrow = 3,ncol =2)
+矩阵的填充是以列的方式来填充的
+
+dim(x)
+可以查克矩阵有多少行多少列
+{# x <- 1: matrix(nrow = 3,ncol =2) #}
+> x
+     [,1] [,2]
+[1,]   NA   NA
+[2,]   NA   NA
+[3,]   NA   NA
+> x <- matrix(1:6,nrow = 3,ncol =2)
+> x
+     [,1] [,2]
+[1,]    1    4
+[2,]    2    5
+[3,]    3    6
+> dim(x)
+[1] 3 2
+> attributes(x)
+
+attributes查看矩阵属性值
+
+#Matrix & Array
+
+
+y2 <- matrix(1:6,nrow = 2,ncol = 3)
+
+#as row行拼接
+rbind(y,y2)
+#as col列拼接
+cbind(y,y2)
+
+vector()+dim()
+x <- matrix(1:6,nrow = 3,ncol =2)
+y <- 1:6
+dim(y) <- c(2,3)
+
+
+二：数组
+与矩阵相似，但是维度可以大于2
+创建数组
+
+x <- array(1:24,dim = c(4,6))
+x1 <- array(1:24,dim = c(2,3,4))
+
+列表(list):
+可以包含不同类型的对象
+创建列表list()
+
+#list
+l <- list("a",2,10L,3+4i,TRUE)
+
+# give name 
+l2 <- list(a=1,b=2,c=3)
+#列表的每一项有好几个值
+l3 <- list(c(1,2,3),c(4,5,6,7))
+#给矩阵的行和列都给名字
+x <- matrix(1:6,nrow = 2,ncol = 3)
+dimnames(x) <- list(c("a","b"),c("c","d","e"))
+
+#factor
+因子
+--分类数据/ 有序 vs 无序
+
+低中高 男女
+
+male/female vs 1/2
+
+常用于 lm() , glm()
+
+#factor
+x <- factor(c("female","female","female","male","male","female"))
+
+#basic line :levels:
+x <- factor(c("female","female","female","male","male","female"),levels = male female)
+
+#zhengtiliaojie
+
+table(x)
+
+# remove attributes
+class(unclass(x))
+
+创建因子：
+factor()
+table() / unclass()
+
+
+R语言缺失值处理：
+NA/NaN
+NaN 属于 NA ,
+NA 不属于 NaN
+NaN 数字类型
+NA可表示多种类型
+
+NA有类型属性： integer NA character NA
+is.na() / is.nan()
+
+数据结构：
+数据框：data frame
+存储表格数据：
+视为各元素长度相同的列表
+	每个元素代表一列数据
+	每个元素的长度代表行数
+	元素类型可以不同
+
+与矩阵相似，但是可以元素不同
+
+
+数据结构：
+日期和时间(date,time)
+日期：date
+	距离1970-01-01的天数/date()/Sys.date()/weekdays()/months()/quarters()
+
+时间：POSIXct/POSIXlt
+
+距离1970-01-01的秒数/Sys.time()
+POSIXct: 整数，常用于存入数据框中
+POSIXlt：列表，还包含星期，年月日等信息
+
+日期与时间(date,time)
+
+字符 --》 日期/时间
+
+字符 -》 日期/时间
+
+as.Date()
+as.POSIXct() / as.POSIXlt() / strptime()
+
+小节：
+五种对象类型：
+character numeric integer complex logical
+
+向量：+2维度矩阵
+向量：>2维度数组
+向量：+不同类型：列表 ————》元素长度相同--》数据框
+数据框---》data.matrix()转换为矩阵
+向量：整数+标签 因子
+
+日期/时间
+
+第三章：基本方法：
+
+构建子集：
+subsetting
+
+原始数据(raw dataset) --> 预处理后的数据()
+
+基本方法：
+[]：提取一个或者多个类型相同的元素
+[[]] :从列表或数据框中提取元素
+$: 按照名字从列表或数据框中提取元素
+
+R语言下标从1开始
+
+逻辑判断
+x[x>6]
+> x[x>6]
+[1]  7  8  9 10
+> x[x>=6]
+[1]  6  7  8  9 10
+> x>5
+ [1] FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE
+ [9]  TRUE  TRUE
+> x[x>5 & x<7]
+[1] 6
+> y <- 1:4
+> names(y) <- c("a","b","c","d")
+> y["b"]
+> x <- matrix(1:6,nrow=2,ncol=3)
+> x
+     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6
+> x[1,]
+[1] 1 3 5
+> x[,1]
+[1] 1 2
+> x[1,c(1,3)]
+[1] 1 5
+#返回矩阵中相应元素
+> class(x[1,2])
+[1] "integer"
+> x[1,2,drop=FALSE]
+     [,1]
+[1,]    3
+
+
+数据框的子集：
+> which(x$v1>2)
+[1] 3 4 5
+> subset(x,x$v1=2)
+Error: unexpected '=' in "subset(x,x$v1="
+> subset(x,x$v1>2)
+  v1 v2 v3
+3  3  8 13
+4  4  9 NA
+5  5 10 15
+
+列表的子集：
+[[]] 
+$
+[[]] []
+[[]] [[]]
+
+嵌套列表 /不完全匹配(partial matching)
+
+
+处理缺失值
+
+x <- c(1, NA, 2, NA, 3)
+x[!is.na(x)]#取得非缺失值
+
+x <- c(1, NA, 2, NA, 3)
+y <- c("a","b",NA,"c",NA)
+z <- complete.cases(x,y) #取对应位置都不是缺失值
+
+x[z]
+y[z]#取得两个向量中都不为NA的列
+
+library(datasets)#导入R自带的数据集包
+head(airquality)#head()方法查看数据集前几行
+
+g <- complete.cases(airquality)
+airquality[g,][1:10,]#显示前10条不含NA属性的记录
+
+#向量化操作
+  （优点：可以作用于向量、矩阵等结构，使得代码简洁、易于阅读、效率高）
+x <- 1:5
+y <- 6:10
+
+x+y
+x*y
+x/y
+
+#以上结果都一一对应
+
+x <- matrix(1:4, nrow = 2, ncol = 2, byrow = T)
+y <- matrix(rep(2,4), nrow = 2, ncol = 2) #函数rep（2,4）表示把2重复4次
+x %*% y  #矩阵真正乘/除法需要如此。
+x * y   #只是对应元素相乘
+
+#本章小结
+1.如何构建子集 []/[[]]/$/[[]][]/[[]][[]]
+
+2.如何处理缺失值 isna() / complete.cases()
+
+3.如何进行向量化操作以及介绍向量化操作的作用
+
+R语言函数
+
+处理循环：
+R不仅有for /while 还有更强大的实现循环的“一句话”函数
+lapply：
+可以循环处理列表中的每一个元素。
+lapply(参数):lapply(列表，函数/函数名,其他参数)
+总是返回一个列表
+lapply循环处理列表中的每一个元素
+lapply(列表，函数，其他参数)
+对于x<-list(a=1:10,b=c(11,21,31,41,51))
+lapply(x,mean)表示对a,b这个元素求平均值
+lapply(x,function(m) m[1,])表示拿到每个元素的第一行
+sapply 简化结果：
+	结果列表元素长度均为1，返回向量
+	结果列表元素长度相同且大于1，返回矩阵
+
+apply函数
+#沿着数组的某一维度处理数据   
+apply(x,2,mean)表示将矩阵x的列求平均值   也可使用简化的函数colMeans（x）
+#将函数用于矩阵的行或者列  #一句话就可以完成for/while函数
+#apply(数组,维度,函数/函数名)
+给出一个数组x<-array(数据，维度，维度名称（可选）)
+
+rowSums(x)
+rowMeans(x)
+colSums(x)
+colMeans(x)
+
+rnorm(100)
+随机从正态分布的总体里抽100个数据
+
+简单点说：
+
+
+
+x赋值函数中的2*3*4分别对应行*列*组（相对应的维度即为1*2*3）
+
+
+
+apply(x,c(1,2),mean)中1,2对应的维度为行*列，不需要考虑组，所以对每组相同位置的所有元素相加后求平均，因此输出的结果为2行3列的矩阵
+
+
+
+同理，apply(x,c(1,3),mean)中1,3对应的维度为行*组，所以分别对每组中的行求平均，因此输出的结果为2行4列的矩阵(x中有4个组，每组中有2行)
+
+
+
+同理，(2,3)就代表列*组了~
+
+排序：
+
+总结数据信息
+
+#lapply的多元版本
+#mapply（参数）
+#mapply(函数/函数名，数据， 函数相关的参数)
+a<-list(rep(1,4), rep(2,3), rep(3,2),rep(4,1))
+b<-mapply(rep,1:4,4:1)#等价于上面的list，rep是函数，1：4表示数据来源于这几个数，最后一个4：1表示要重复多少次
+
+s <- function(n, mean ,std){
+  rnorm(n, mean, std)
+}    n表示从正态分布中取数的个数，mean表示均值，std表示标准差
+s(4,0,1)
+#调用函数s,生成1到5四个元素，其中均值是5到1，标准差是2
+mapply(s, 1:5,5:1,2)  第二个表示个数，第三个表示均值，第四个表示标准差
+list(s(1,5,2),s(2,4,2),s(3,3,2),s(4,2,2),s(5,1,2))#这个list的效果跟mapply函数一样
+得到的结果就是第一个为均值为5，标准差为2，的一个数值；
+第二个就是均值为4，标准差为2，的2个数值
+
+
+
+
+
+
+#tapply
+#对向量的子集进行操作
+tapply(向量，因子/因子列表，函数/函数名)
+x <- c(rnorm(5), runif(5),rnorm(5,1))
+多少个水平，每个水平有多少个元素
+f <- gl(3,5)
+tapply(x,f,mean)
+tapply(x,f,mean, simplify = FALSE)
+
+
+split
+#根据因子或者因子列表将向量或其他对象分组
+通常与lapply一起使用
+split(参数):split(向量/列表/数据框，因子/因子列表)
+用split函数查看某一部分数据，table函数具体计算每个出现的次数
+table(airquality$Month)表示月份下出现的次数
+lapply(s,function(x) colMeans(x[,c("Ozone","Wind","Temp")]))求每个月的臭氧，风速，温度的平均值，首先传入参数s，然后就是命名的函数，关心多个量所以用c组合，s本来是框
+
+排序
+#sort对向量进行排序，返回排好序的内容
+#order返回排好序的内容的下标
+
+x <- data.frame(v1=1:5, v2=c(10,7,9,6,8), v3=11:15, v4=c(1,1,2,2,1))
+x
+sort(x$v2)#v2列按照升序排列
+sort(x$v2,decreasing = True)#v2列按照降序排列
+
+order(x$v2)#返回的不是内容本身，是内容的下标
+x[order(x$v2),]#对x数据框按照v2进行排序
+x[order(x$v4, x$v2, decreasing = True), ]#将序排列x,先按照v4,次要按照v2
+
+
+七、总结数据信息
+#默认前六行或者后六行
+head(airquality, 10)#查看前10行
+tail(airquality, 10)#查看后10行
+
+summary(airquality)#总结，数据分布整体把握
+str(airquality)#以简洁方式对数据总结
+
+table(airquality$Month)#对列进行频数统计
+table(airquality$Ozone, useNA = "ifany")#将Ozone中NA的数值统计出来
+table(airquality$Month ,airquality$Day)
+
+any(is.na(airquality$Ozone))#判断是否有缺失值，true是有缺失值
+sum(is.na(airquality$Ozone))#统计缺失值数量
+
+all(airquality$Month < 12)#查看是不是所有的月份都小于12
+
+#将Titanic强制转换为数据框
+t <- as.data.frame(Titanic)
+x <- xtabs(Freq ~ Class + Age, data = t)#按照Class和Age生成交叉表
+ftable(x)#扁平化显示
+object.size(airquality)#查看对象大小
+print(object.size(airquality),units="Kb")#按照kb显示大小
+
+
+小结：
+一句话循环：lapply(sapply,split)/apply/mapply/tapply
+排序： sort/order
+总结数据信息： head/tail/summary/str/table/xtabs/ftable/object.size

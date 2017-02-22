@@ -1,0 +1,224 @@
+oop
+
+对象
+数据 功能
+
+复用 灵活 可扩展
+
+
+面向对象的概念
+
+抽象
+
+类&对象
+
+属性&方法
+
+多态
+
+封装&继承&多态
+
+用python定义类
+
+构造函数&析构函数
+
+del __del__(self,...)
+析构函数在销毁一个对象的时候
+
+old style class:
+class oldstyle:
+	pass
+定义新式类
+class ClassName(object):
+	"""docstring for ClassName"""
+	def __init__(self, arg):
+		super(ClassName, self).__init__()
+		self.arg = arg
+
+
+/**
+ * 定义类的属性
+ */
+
+1：直接在类里定义：
+class programmer(object):
+	sex ='male'
+2:在构造函数里的定义：
+class OldStyle:
+	def __init__(self, name, description):
+		self.name = name
+		self.description = description
+3：访问控制：
+没有访问控制
+python没提供私有属性
+self.name = name 公开
+self._age = age  私有属性
+self.__weight =weight 部分的私有属性/类里可以，对象里不行。
+
+
+print programmer.__dict__
+构造函数里获得的属性
+
+
+
+定义类的方法：
+
+函数和方法：
+
+函数是直接用函数名调用
+
+方法是类的一部分
+
+类的方法也是类的属性
+
+万物皆对象
+
+方法的访问控制：
+
+公用
+私有
+双下划线是被限制，改了名称
+
+
+装饰器
+@classmethod
+直接用类名来调用。而不是使用某个对象
+
+@property
+像访问属性一样调用方法
+
+
+类的继承：
+
+使用super()调用父类的方法：
+super(b,self).method(arg)
+
+
+直接使用类名调用父类的方法：
+A.method()
+
+子类的类型判断
+isinstance()
+issubclass
+
+
+类的多态
+
+继承&方法的重写
+
+python magic method
+
+python的魔术方法：
+
+def __init__(self):
+构造函数
+
+对象的创建和初始化：
+
+常用的类定义：
+__init__(self,name,age)
+
+分成两步：
+1:创建类的对象：
+def__new__(cls) 
+2：初始化对象：
+def__init__(self)
+
+__del__()
+
+类与运算符
+
+比较运算符：
+__cmp__(self,other)
+
+__eq__(self,other)
+等于
+__it__(self,other)
+小于
+__gt__(self,other)
+大于
+
+add
+sub
+mul
+div
+
+
+逻辑运算符
+
+or
+and
+
+
+类的展现有关的魔术方法：
+
+转换为字符串
+__str__
+
+
+
+__repr__
+
+repr的可以使用eval()执行
+
+__unicode__
+
+——dir——
+
+
+类的属性访问
+
+访问控制：
+木有
+
+设置对象属性：
+
+——setattr———
+
+1：def __setattr__(self,name,value):
+	setattr(self,name,value)
+1：无限迭代报错
+def __setattr__(self,name,value):
+	self.__dict__[name] = value
+
+查询对象属性：
+
+__getattr__(self,name):
+默认没有被查询到
+__getattribute__(self,name):
+每次都会访问到
+
+删除对象属性：
+__delattr__
+
+课程小节
+
+类和对象：
+
+属性方法：
+
+继承：
+
+定义类。
+
+定义属性和方法
+
+继承
+
+object继承
+
+magic method
+构造对象
+
+__new__
+
+del
+
+运算符
+
+
+类的展现
+
+类的属性访问
+
+不要有无限递归的错误。

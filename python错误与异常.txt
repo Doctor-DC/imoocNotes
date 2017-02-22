@@ -1,0 +1,73 @@
+错误：
+1：语法错误：代码不符合解释器或者编译器语法
+2：逻辑错误：不完整或者不合法输入或者计算出现问题
+错误和异常：
+异常：执行过程中出现问题导致程序无法执行
+1：程序遇到逻辑或者算法问题
+2：运行过程中计算机错误（内存不够或者IO错误
+
+python常见错误与异常
+
+未定义就引用
+a：
+Nameerror
+
+if a：
+语法错误
+
+f =open
+io错误：
+
+10/0
+zerodivisioError
+
+a =int('dd')
+valueError
+
+总看到这个空行按下Ctrl C就出现了神奇的keyboard interrupt 强制终止程序产生
+
+
+try:
+	pass
+except Exception as e:
+	raise e
+
+try:
+	a
+except Nameerror as e:
+	print "catch error"
+
+try:
+    try_suite //所要处理的逻辑代码
+except Exception [e]: //异常的类
+    exception_block //捕获异常之后的逻辑
+
+
+  运行时错误,运行时错误
+
+
+  with语句是上下文管理协议
+
+  上下文管理器
+
+
+  raise语句
+
+  exception：异常类
+raise IOERRor："描述"
+raise->主动抛出异常  //当你已经明显的知道已经运行出错了的话，可以使用此函数
+raise XXError,'descriptin'
+assert->判断语句是否为假，如果是假抛出一个assert异常
+assert 7==6 ‘file not’ //用于一些对函数进行传参的时候对参数限制严格。如果不符合要求，抛出异常
+
+
+
+自定义异常
+
+自定义异常必须集成
+
+
+class fileError(IOError):
+	pass
+
+

@@ -1,0 +1,141 @@
+request库
+
+准备request
+处理response
+
+学好requests库的意义
+
+追妹子
+信息获取
+
+restful api
+
+http协议
+
+hyperText transfer protocol
+
+超文本传输协议
+
+
+urllib和urllib2是相互独立的模块
+
+requests库使用了urllib3
+（多次请求重复使用socket）
+
+{# 下载 #}
+
+
+
+/**
+ * 发送请求
+ */
+
+github api
+
+get 查看资源
+post 增加资源
+
+put 修改资源
+delete 删除资源
+
+head 查看相应头
+options 查看可用请求方法
+
+
+
+带参数的请求
+
+三种 ：
+
+1.url parameters：url参数
+
+params: requests.get(url,params={'key1':'value1'})
+
+自动拼接
+
+2.表单提交
+content-type:application/x-www-form-unlencoded
+
+requests.post(url,data ={'key1':'value1','key2':'value2'})
+
+3.json参数提交
+
+content-type: application/json
+内容： {"key1":"value1","key2":"value2"}
+
+requests.post(url,json={'key1':'value1','key2','value2'})
+
+githubapi示例
+
+请求异常处理
+
+自定义request
+
+庖丁解牛
+
+1.session
+
+2.准备好的request、
+
+3.response对象
+
+
+response对象
+
+
+利用爬虫下载图片
+
+下载服务器文件
+
+
+事件钩子
+
+event hooks
+
+JavaScript
+回调
+
+io请求-》o
+o-》回调函数
+回调函数->reponse to IO请求
+
+
+requests库进阶话题
+
+
+http认证
+
+基本认证
+auth =(username,password)
+
+OAUTH认证：
+
+app ——————》 跳转页面 client_id,scope信息  用户确认
+用户query ——————》code/ticket---->app
+app ------>post 获取access——token ----》github
+github------》access——token-------》app
+app -------》 get获取需认证的资源---》github
+github——————————》返回资源————————》app
+
+
+代理proxy：
+
+requests结合session和cookie
+
+
+浏览器 ----》无cookie----》服务器
+服务器-----》http响应(set cookie)-----》浏览器解析cookie到本地
+
+浏览器------》发出带cookie的请求-----》服务器
+服务器------》解析cookie识别信息响应http-----》浏览器
+
+r= requests.get(url)
+r.cookies['cookiename']
+
+cookies =dict(c='uid')
+requests.get(url,cookies=cookies)
+
+
+set cookie-session-id 
+
+浏览器带着sessionid去找session

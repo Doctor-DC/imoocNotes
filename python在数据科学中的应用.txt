@@ -1,0 +1,269 @@
+python代码的行为依赖于不同的数据类型
+a+b
+1+2
+'ab' + 'cd'
+
+python中的list
+float int str bool True False
+fam = list [a,b,c]
+
+给变量集合命名
+list可以嵌套
+list里面可以包含任何内容
+
+list的功能与行为
+
+获取list的子集
+
+索引由0开始
+fam[6]
+获取索引
+fam[-1]
+反向获取索引
+
+切割：
+[1,2,3,4,5]
+fam[3:5]
+起点包含，终点不包含
+
+fam[:4]
+由最开始元素开始取到第三个索引
+fam[5:]
+由第五个取到最后
+
+
+list的操作：
+
+改变list的元素
+
+一个
+list[7] = 1.86
+多个
+list[0:2] =["lize",1.74]
+
+添加和删除元素
+fam +['me',1.79]
+直接连在原来list的尾部、
+
+del(fam(3))
+
+
+背后的原理(1)
+x = ["a","b","c"]
+y = x
+y[1] ="z"
+y
+x
+改变y，但是因为y指向x的地址引用，指向的是同一块内存，所以x，y都发生了改变
+
+背后的原理(2)
+此时想要获得list的内容copy，但确是一个全新的list
+应该使用：
+y =list(x)
+y =x[:]
+
+
+python的函数
+
+type()
+
+函数就是可重用的代码：
+可以解决特定的问题
+调用函数而不是重新写代码
+
+例子
+max(fam)
+得到最大函数
+
+round(1.68,1)
+四舍五入取近似
+不给参数
+round(1.68)
+返回给与输入最接近的整数
+
+
+
+help(round)
+
+round(number[,ndigits])  --->number
+被方括号扩着的是可选函数
+
+python中的方法：
+max()
+len()
+
+pyhton里万物皆对象
+
+方法：从属于对象的函数：
+str：
+	capitalize() 大写方法：
+	replace()  替换方法
+fam.index("mom")
+
+fam.count(1.73)
+1.73出现的次数
+
+sister
+'liz'
+sister.capitalize()
+'Liz'
+sister.replace("z","sa")
+'lisa'
+
+任何东西都是对象
+不同类型的对象有不同的方法
+
+
+方法(2)
+fam.append("me")
+fam.append(1.79)
+
+改变对象的内容
+
+函数
+type
+
+方法
+在对象上调用函数
+
+包的概念：
+
+动机：
+方法函数功能很强大，集成
+
+包是python脚本的目录:
+每一个脚本是一个模块。指定了函数方法和类型
+
+有几千个可用的包
+numpy
+matplotlib
+skit-learn
+
+包的安装：
+
+import numpy
+numpy.array([1,2,3])
+import numpy as np
+
+np.array([1,2,3])
+
+只想用这几个指定的函数
+
+from numpy import array
+
+array([1,2,3])
+
+list 回顾
+元素集合
+包含不同类型的元素
+改变，添加，删除元素
+数据科学的需要
+
+	直接对集合进行操作
+
+height = [1.73,1.68,1.72,1.89,1.79]
+
+weight = [65.4,59.2,63.6,88.4,68.7]
+
+weight / height ** 2
+
+numpy 来解决：
+数值化的python
+
+pythonlist的替代品： numpy array
+
+numpy数组：元素只能有一种类型
+
+numpy的数组是一种与list不同的数据类型：
+不同的类型，将会有不同的行为
+
+例子：
+list相加是直接在后面续上
+np.array相加是对应元素挨个加
+
+二维数组：
+
+数据分析：
+
+平均数:mean()
+中位数:median()
+sum()
+sort()
+数据类型单一，所以速度很快
+
+height = np.round(np.random.normal(1.75,0.20,5000),2)
+height = np.round(np.random.normal(60.32,15,5000),2)
+
+np_city = np.column_stack(height,weight)
+
+
+数据可视化：
+探索数据
+信息展现
+matplotliib
+pyplot
+折线图./散点图
+
+直方图
+
+
+个性化
+
+1、在处理图形时，要写在show之前。
+
+2、plt.xlabel（X轴标签）plt.ylabel（Y轴标签）：分别在两个轴添加标签
+
+3、plt.title（标题）；给图添加标题
+
+4、plt.yticks（坐标列表#，表示出来的坐标 列表#）；给Y轴添加坐标刻度
+
+5、将图以另外一种形式表现出来
+   plt.fill_between（x，y，0，color=你设定的颜色）：填充形式
+
+布尔类型
+{# 关系运算符：>,<,>=,<=,==,!=
+逻辑运算符：and,or,not
+条件表达式：if 条件 :
+               表达式
+            elif 条件 :
+               表达式
+            else :
+               表达式
+ #}
+{#  1、==、！=、<、>、<=、>=、
+
+2、and  or  not
+
+3、%：取余数
+
+4、if condition：
+       expression 0
+   elif：
+       expression 1
+   else：
+       expression 2 #}
+numpy数组：
+二维数组numpy
+缺点：只能有一种元素类型
+pandas：
+dataframe
+brics
+
+
+
+
+ 1、pandas.
+
+2、import pandas as pd
+   biao=pd.read_csv(“路径名”)
+
+3、获取列：
+   biao[列名]或者biao.列名#不用引号标注#
+   可以通过计算构造列
+
+4、获取行：
+   biao.loc[行名]
+   获取元素：
+   biao.loc[行标，列标]
+   biao[列标].loc[行标]
+   biao.loc[行标][列标]

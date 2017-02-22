@@ -1,0 +1,8 @@
+app目录：程序的核心代码 和 我们的业务逻辑代码，其中的 http 目录是我们业务逻辑的存放点。http 目录下有 定义路由文件 和 中间器文件 和 编写业务逻辑的控制器 目录。
+bootstrap：包含框架启动的和自动加载文件。
+config：包含所有程序中的配置文件，比如：cache.php（缓存）、database.php（数据库）、mail.php（邮件）、queue.php（队列）、session 和 view.php（视图）。
+database：包括数据库填充 和 迁移文件。
+public：程序入口 和 静态文件，比如之后的 CSS 、JS、IMG 等。
+resources：包含 视图 和 原始系统文件。
+storage：包含 编译后的文件。
+tests：单元测试目录，存放测试代码。

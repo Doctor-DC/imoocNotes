@@ -1,0 +1,123 @@
+f = open('imooc.txt')
+
+for line in f:
+
+匹配一个下划线和字母开头的
+
+每次匹配都要单独完成，我们能否把她做成一个规则
+本章重点：正则就是匹配字符串和数据的；
+第一节例子中涉及的知识点：
+1，一个句子太长时使用\ 符号来换行
+2，一个句子结尾是\n来结束的，所以用endswith（‘’）方法匹配时要注意传入的变量带有\n
+3，切片的使用
+正则表达式的过程：依次拿出表达式与文本中的字符进行比较，如果每一个字符都能匹配，则匹配成功，否则匹配失败。
+
+
+概念：
+使用单个字符串来描述匹配一系列符合某个语法规则的字符串
+是对于字符串操作的一种逻辑公式
+应用场景：
+处理文本和数据
+正则表达式过程：依次拿出表达式和文本中的字符比较，如果每一个字符都能匹配，则匹配成功，否则匹配失败
+
+
+正则表达式之re模块使用
+
+import re python正则表达式模块
+
+第一个正则表达式
+
+re.compile(r''imooc)
+pattren.match('imooc python')
+
+r'imooc' ->pattern -> match -> result
+
+正则表达式基本语法
+
+單個字符匹配
+/**
+ * 
+ */
+. 匹配任意字符（除了\n ）
+[...] 匹配字符集
+\d/\D 匹配数字/非数字
+\s/\S 匹配空白/非空白字符串
+\w/\W 匹配单词字符[a-zA-Z0-9]/非单词字符
+
+r'{[a-zA-J0-9]}' 
+ma = re.match(r'{[a-zA-J0-9]}','{0}')
+ma = re.match(r'{[\w]}','{0}')
+反斜杠
+ma = re.match(r'\[[\w]\]','[a]')
+
+
+正则表达式语法多个字符
+/**
+ * 多个字符语法
+ */
+
+* 匹配前一个字符0次或者无限次
++ 匹配前一个字符一次或者无限次
+？匹配前一个字符0次或者1次
+{m}/{m,n} 匹配前一个字符m次或者n次
+*？/+?/?? 匹配模式变为非贪婪(尽可能少匹配字符)
+
+正则表达式边界匹配
+
+^ 匹配字符串开头
+$ 匹配字符串结尾
+\A / \z 指定的字符串匹配必须出现在开头/结尾
+
+
+正则表达式语法
+| 匹配左右任意一个表达式
+(ab) 括号中表达式作为一个分组
+\<number> 引用编号为num的分组匹配到的字符串
+(?P<name>) 分组起一个别名
+(?P=name) 引用别名为name的分组匹配字符串
+
+
+python正则表达式
+re模块其他方法
+match方法从头匹配
+
+search(pattern,string,flags=0)
+在一个字符串中查找匹配
+findall(pattern,string,flags=0)
+找到匹配，返回所有匹配部分的列表
+
+sub(pattern,repl,string,count=0,flags=0)
+将字符串中匹配正则表达式的部分替换为其他值
+repl两种情况：字符串或函数返回值
+
+split(pattern,string,maxsplit=0,flags=0)
+根据匹配分割字符串，返回分割字符串组成的列表
+
+
+
+抓取网页
+获取网页地址
+抓取网页内容到本地
+
+{# 说到底finally:就是个保底的语句，当语句出现错误了还能解决错误语句留下的烂摊子
+
+用来在异常之后将文件关闭释放资源
+
+try except finally语句的使用：
+当出现异常，先进行异常处理，在执行finally语句。
+try expect else finally 语句的使用。
+没有异常 try->else->finally
+有异常 try->expect->finally #}
+
+
+wiki ^/wiki/
+
+from urllib.request import urlopen
+from bs4 import BeautifulSoup as bs
+import re
+
+resp = urlopen("https://en.wikipedia.org/wiki/Main_Page").read().decode("utf-8")
+soup = bs(resp,"html.parser")
+listUrls = soup.findAll("a", herf=re.compile("^/wiki/"))
+for url in listUrls:
+    print(url["herf"])

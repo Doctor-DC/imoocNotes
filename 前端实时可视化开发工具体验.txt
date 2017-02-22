@@ -1,0 +1,12 @@
+livestyle
+css双向绑定
+
+livereload
+html/css
+
+browserSync
+
+命令
+browserSync 
+browser-sync start --server --files **
+全部监视

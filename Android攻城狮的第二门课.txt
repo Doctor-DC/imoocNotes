@@ -1,0 +1,1163 @@
+主配置清单文件 
+包名版本号 组件 权限 应用的配置 在安卓工程的根目录下
+全局 组件 权限 
+包名 版本信息 组件四种组件 权限
+AndroidManifest常用标签
+全局篇(包名、版本信息）
+组件篇(四大组件)
+权限篇(申请权限和定义权限)
+
+AndroidMinifest全局：
+1.应用的包名及版本信息的管理：
+  package="com.example.test"
+  android:versionCode="1"
+  android:versionName="1.0"
+2.控制android版本信息
+  android:minSdkVersion="8"(可以支持的最低版本)
+  android:targetSdkVersion="16"(期望的系统版本)
+
+
+ 组件 application 
+ 1-标签 label
+ 2-设置主题样式theme
+ 3-图标icon
+ 只有一个application节点可以包括各种各样的组件
+activity 
+service 
+contentprovider 
+receiver
+
+activity 
+全名的书写方式：包名.类名 
+启动没有在清单中注册的就会抛出运行时异常
+intent 
+组件间通信的手段 
+组件通过name属性标识 
+2intent filter过滤器的作用 
+截取程序新建的第一个activity的标志 
+通过Main入口 
+Service服务
+同activity使用的每一个service绑定 只能后台逻辑代码的处理
+contentProvider
+数据库的访问 程序间的数据共享
+broadcast  Receiver
+面向全局的窃听器 
+intent filter主键间的介绍和过滤器action符合
+两个android 配置文件
+ 全局包名 16对应4.1 19对应4.4 application icon对应用的全局终止 整个应用的res 文件夹下的图 label theme 四个主键 声明组件继承相应的组件 contentProvider 
+快捷键alt+/代码的提示 ecplise中组件的信息activity mainactivity service name 属性是必须要写的 通过快捷键写 name 属性是包名.类名 provider  name 和uri的定义 authorities 配置组件 intentfilter 第一个activity是android自带的activity完成组件和组件间的通信 跳转的作用运行应用 观察到跳转 到第二个界面的跳转通过intent filter的配置 配置文件中 action 构造和第二个界面 如何没有相应的activity没有在配置文件中声明 错误 activity not found
+
+Intent的第二种使用方式，隐式Intent：利用Manifest.xml中的action和category标签进行匹配来实现Activity的切换
+
+在AndroidManifest.xml文件下为应用程序申请权限
+
+使用<user-permission> 标签申请权限   具体权限可以查找文档
+http://www.bejson.com/doc/AndroidManifest/
+<uses-permission
+
+知识点总结。
+一、两个应用程序之间跳转
+   1.实例化Intent;不需要参数；
+   2.intent.setClassName("","");需要两个参数，第一个为要跳转的Activity的报名。第二个为要跳转的Activity的全名称（报名.类名）
+   示例：Intent intent = new Intent();  
+		intent.setClassName("com.example.calculatordemo",                        "com.example.calculatordemo.MainActivity");
+
+二、自定义权限（以为Activity访问加权限为例）
+  1.在AndroidManifest.xml下，使用<permission标签自定义权限>
+  示例<permission 
+        android:name="mypermission.aa" （注意，这里的名字必须有“.”，否则报错）
+        android:protectionLevel="normal"
+        ></permission>
+    2. 为Activity加访问权限
+       示例：        <activity
+            android:permission="mypermission.aa" ...（后面省略）
+    3.在另一个应用程序中申请权限
+      示例 <uses-permission 
+        android:name="mypermission.aa"></activity>
+组件必须包含android:name这个属性，android:name（包名+类名）intent_filter（过滤器）可以选写广播可以使用代码注册声明否则会报错；
+
+ 四大组件除了BroadcastReceiver可以使用代码声明注册以外：
+/还可以在Activity中注册    
+在onResume方法中注册receiver     
+registerReceiver(BroadcastReceiver实现类对象,Intentfilter的对象);     需要用IntentFilter.addAction("flag");
+设置广播的样式，只要发送的广播的Action匹配此Action的值，就可以收到广播了
+其他组件都只能在manifest文件中进行声明注册。
+
+1、理解ListView的基础使用
+
+2、学会熟练运用两种适配器(ArrayAdapter、SimpleAdapter)
+
+3、学会熟练运用两种监听器(OnScrollListener,OnItemClickListener)
+
+4、学会熟练运用适配器数据的刷新(notifyDataChanged)
+
+ListView控件<br>
+功能：Android中显示列表，每一个ListView都可以包含很多个列表项。
+
+数据适配器：把复杂的数据填充在指定的视图界面上
+
+ArrayAdapter  数组适配器  用于绑定格式单一的数据
+
+数据源：可以是集合或数组  
+
+SimpleAdapter  简单适配器：用于绑定格式复杂的数据
+数据源:只能是特定泛型的集合
+
+数据适配器是连接数据源和视图界面的桥梁
+
+使用过程：新建适配器->添加数据源到适配器->视图加载适配器
+
+
+有时会碰到ListView的onItemClickListener事件无法响应，
+
+主要原因：listview的子元素中包含了Button或者ImageButton之类的元素，button的优先级高于listview 所以不能监听item的点击事件。
+
+解决方法：在item 的根节点加入 “ Android:descendantFocusability="blocksDescendants" 即可。
+监听器（监听ListView列表点击事件）：
+
+1.作用：android提供了很多种事件监听器，监听器主要是为了去响应某个动作，（动作的发起者可以是用户的操作也可以是android系统本身），我们可以通过监控这种动作行为，来完成我们需要的程序功能。
+
+2.OnItemClickListener: 可以处理视图中单个条目的点击事件
+
+3.OnScrollListener: 监测滚动的变化，可以用于视图在滚动中加载数据
+
+注意：监听器是程序和用户（或系统）交互的桥梁
+
+实现过程：视图直接设置监听器，在相关的实现方法中补充需要的代码即可
+
+ListView 增加点击事件
+1.实现OnItemClick  
+ public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+2.其中position代表位置。
+3.lv.getItemAtPosition(position); -object 可以返回该位置的Object对象，包含了该Item中的一些信息
+知识要点及注意事项
+ 常见的列表下拉刷新是由onScrollListener实现的
+ 熟练地运用notifydatachanged可以动态更新视图中包含的数据
+ 总结：
+（1）SimpleAdapter的构造方法中参数较多，写的时候不要着急，要对应好的布局文件中的id
+(2)监听器和适配器是通用于很多android控件上，不局限于ListView
+（3）本课案例通过onScrollListener监听了用户手指滑动的动作，实际上我们常见的列表下拉刷新就是依此扩展的。
+（4）熟练运用notifyDatasetchanged,它可以动态更新视图中所包含的数据。
+
+1. DatePicker\TimePicker
+实现动态输入日期和时间的功能
+2. DatePickerDialog\TimePickerDialog
+实现动态输入日期和时间的对话框
+3. 监测日期、时间改变的监听器：
+两个接口：OnDateChangedListener\OnTimeChangedListener
+当更改了时间时，将触发对应的事件：onDateChange()\onTimeChange()，返回一个日期和时间
+另外两个接口：OnDateSetListener\OnTimeSetListener
+当更改了对话框里的日期和时间时，将触发对应的事件：onDateSet()\onTimeSet()
+
+1.DatePicker和TimePicker两种实现动态输入日期和时间的功能。
+2.DatePickerDialog和TimePickerDialog两种实现动态输入日期和时间的对话框
+3.两组针对监测日期时间改变的监听器包含：
+(1)OnDateChangedListener和OnTimeChangedListener():
+当用户更改了DatePicker里的年月日时，将触发OnDateChangedListener监听器的onDateChanged()事件，当用户更改了TimePicker里的时分时，将触发OnTimeChangedListener监听器的onTimeChanged()事件
+(2)OnDateSetListener和OnTimeSetListener():
+当用户更改了DatePickerDialog里的年月日时，将触发OnDateSetListener监听器的onDateSet()事件，当用户更改了TimePickerDialog里的时分时，将触发OnTimeSetListener监听器的onTimeSet()事件
+
+DatePicker总结。
+1。实例化DatePicker 
+2. 使用datePicker.init()//初始化
+3，其中，前三个参数分别对应默认的 年，月，日，最后一个参数是
+onDateChangedListener监听器
+
+public void init(int year, int monthOfYear, int dayOfMonth,
+            OnDateChangedListener onDateChangedListener)
+
+
+DatePicker
+1.month在机器中运行时是从0开始的，在sdk方法中使用一律采用不加1的方式，只有当用于显示时才手动加1；
+2.获取日期实例并初始化并打印：
+Calendar cal=Calendar.getInstance();
+3.获取当前日期及时间：
+int year=cal.get(Calendar.YEAR);
+int month=cal.get(Calendar.MONTH)+1;
+int day=cal.get(Calendar.DAY_OF_MONTH);
+int hour=cal.get(Calendar.HOUR_OF_DAY);
+int minute=cal.get(Calendar.MINUTE_OF_HOUR);
+setTitle(year+"-"+month+"-"+day+"-"+hour+":"+minute);
+4.//使标题上的日期能随着选择的改变而改变
+datePicker.init(year,month,day,new OnDateChangedListener()){
+@Override
+public void onDateChanged(DatePicker view,int year,int cal.get(Calendar.MONTH_OF_YEAR)，int dayOfMonth){
+setTitle(year+"-"+(monthOfYear+1)+"-"+dayOfMonth);
+}
+}
+
+DatePickerDialog总结
+1.实例化    public DatePickerDialog(Context context,  //上下文
+            OnDateSetListener callBack,  //回掉函数
+            int year,   //初始年月日
+            int monthOfYear, 
+            int dayOfMonth)
+2.调用.show()方法显示
+
+1.DatePicker对象以init()这个方法来指定DatePicker初始的年、月、日及OnDateChangedListener()的事件而TimePicker对象则是直接以setOnTimeChangedListener()事件来处理时间改变时程序要做的操作。
+2.DatePickerDialog与TimePickerDialog与前面这两种类型的对象最大的差别在于DatePicker与TimePicker是直接显示在屏幕画面上，而DatePickerDialog与TimePickerDialog对象则是以弹出Dialog的方式来显示
+
+其实time or datepickerdialog也不一定就直接显示在屏幕上
+可以timedatepickerdialog tpd = new timedatepickerdialog(...,...,..)
+在需要的时候（比如点击某个button）让tpd.show();使之弹出对话框显示在屏幕上
+
+1：主题：使用GridView以表格形式显示多张图片
+2：课程目标：学会使用GridView制作二维布局界面（行、列分布）
+3：GridView用来干嘛：用于在界面上按行、列分布的方式来显示多个组件；
+应用举例：手机系统桌面、手机360安全卫士功能列表、聚划算搜索全部内容列表
+4：相似列表组件间比较：
+GridView 二维列表显示（行列式）
+ListView 一维行可下拉表显示（单调行表）
+5：GridView的实现：
+数据源-->适配器-->视图界面
+
+gridView实现过程:
+1.准备数据源
+dataList=new ArrayList<Map<String,Object>>();
+
+2.新建适配器(SimpleAdapter)
+adapter=new SimpleAdapter(this,getData(),自定义布局,new String[]{"image","text"},new int[]{R.id.image,R.id.text});
+(getData方法内容见笔记附录1)
+
+3.gridView加载适配器
+gridView.setAdapter(adapter);
+
+4.gridView配置时间监听器(OnItemClickListener)
+插入接口OnItemClickListener
+gridView.setOnItemClickListener(this);
+(onItemClick见笔记附录2)
+
+
+笔记附录：
+1.getData方法内部
+private List<Map<String,Object>> getData(){
+    for(int i=0;i<icon.length;i++){
+        Map<String,Object>map=new HashMap<String,Object>();
+        map.put("image",icon[i]);
+        map.put("text",iconName[i]);
+        dataList.add(map);
+    }
+    return dataList;
+}
+
+2.public void onItemClick(...){
+    Toast.makeText(this,"我是"+iconName[position],Toast.LENGTH_SHORT).show();
+}
+
+gridview 三个常用的属性
+
+ numcolumns   :每一行显示多少列   列数  可以自动适配  auto_fit
+
+ horizontalspacing    两列之间的间距 其实翻译过来就是水平之间的距离  就是两列之间的距离
+
+ verticalspacing     行距  垂直之间的距离
+
+ margintop 是距离上边缘的距离
+
+
+ GridView关键属性：
+
+1、android：hourizontalSpacing 两列之间的间距
+
+2、android：verticalSpacing 两行之间的间距
+
+3、android：numColumns 每行显示几列
+GridView 监听事件  
+1.使用gridview对象设置OnItemClickListener()方法
+ public void setOnItemClickListener(OnItemClickListener listener) 
+2.将实现了OnItemClickListener接口的方法对象赋予他
+
+第一步：添加一个下拉列表项的list,这里添加的项就是下拉列表的菜单项
+
+第二步：为下拉列表定义一个数组适配器(ArrayAdapter),这里就用到前面定义的list
+
+第三步：为适配器设置一个下拉列表下拉时的菜单样式
+
+第四步：将适配器添加到列表上   spinner加载适配器
+
+第五步：为下拉列表设置各种事件的响应，这个事件响应菜单被选中
+
+Spiner下拉列表相当于Html中的Selecte标签
+
+1.添加数据源列表项List
+
+2.新建适配器
+
+3.设置样式 adapter.setDropDownViewResource(android.R.layout.simple_spinner_drop_ite)
+
+4.将适配器添加到下拉列表上 mySpint.setAdapter(adapter);
+
+5.设置监听mySpint.setOnItemSelectedListener(new ItemSelectedListener)
+
+Spinner 下拉列表：
+
+第一步：添加一个下拉列表项的list，这里添加的项就是下拉列表的菜单项：
+
+private List<String> list = new ArrayList<String>();
+list.add("北京");
+list.add("北京");
+list.add("上海");
+list.add("广州");
+list.add("深圳");
+---》以上表示数据源
+
+第二步：为下拉列表定义一个数组适配器（ArrayAdapter）,这里就用到前面定义的list
+
+adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,list);
+---》以上表示定义适配器，添加数据源
+
+第三步：为适配器设置下拉列表下拉时的菜单样式。
+
+adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+第四步：将适配器添加到下拉列表上--->Spinner加载适配器
+
+mySpinner.setAdapter(adapter);
+
+第五步：为下拉列表设置各种事件的响应，这个事件响应菜单被选中
+
+mySpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener()
+--->为Spinner设定监听器
+
+
+
+
+用simpleAdapter的时候，直接用getData（）会影响效率，不如直接把图片先放在一个View里面，然后调用，会提高效率。
+
+ProgressBar简介（进度条）：
+
+ProgressBar是进度条组件，通常用于向用户展示某个耗时操作完成的进度，而不让用户感觉是程序失去了响应，从而更好地提升用户界面的友好性
+课程目标：
+（1）制定ProgressBar显示风格
+（2）ProgressBar的分类
+（3）标题上ProgressBar的设置
+（4）ProgressBar的关键属性
+（5）ProgressBar的关键方法
+（6）ProgressDialog的基础使用
+（7）自定义ProgressBar样式
+
+制定ProgressBar显示风格：
+
+style="?android:attr/prgressBarStyleLarge" 大环形进度条
+
+style="?android:attr/prgressBarStyleSmall" 小环形进度条
+
+style="?android:attr/prgressBarStyleHorizontal" 水平进度条
+
+ProgressBar的分类：
+
+（1）可以精确显示进度（可以显示刻度或者百分比）
+
+（2）不可以精确显示进度（一直转啊转，类似于一个过场动画）
+
+标题中的ProgressBar总结。
+在OnCreate中加入如下代码
+//标题启用进度条
+requestWindowFeature(Window.FEATURE_PROGRESS);   //启用带进度进度条
+requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS); //启用不带进度进度条
+
+setProgressBarVisibility(true); //设置“带进度进度条”可见
+setProgressBarIndeterminateVisibility(true);//设置“不带进度进度条”可见
+setProgress(600); //设置“带进度进度条”当前进度。默认Max为10000
+
+
+AS1.5 
+
+android studio 中吧MainActivity继承自AppCompatActivity，改成Activity后 在AndroidManifest.xml中的<activity>的属性里添加android:theme="@android:style/Theme.Holo" 就能显示了
+
+ProgressBar的关键属性：
+
+（1）android:max="100" --->最大显示进度
+（2）android:progress="50" --->第一显示进度
+（3）android:secondaryProgress="80" --->第二显示进度
+（4）android:indeterminate="true" --->设置是否精确显示
+
+true表示不精确显示进度，false表示精确显示进度
+
+ProgressBar的关键方法：
+
+（1）setProgress(int) 设置第一进度
+（2）setSecondaryProgress(int) 设置第二进度
+（3）getProgress() 获取第一进度
+（4）getSecondaryProgress() 获取第二进度
+（5）incrementProgressBy(int) 增加或减少第一进度
+（6）incrementSecondaryProgressBy(int) 增减活减少第二进度
+（7）getMax() 获取最大进度
+
+
+//新建progressDialog对象
+			proDialog=new ProgressDialog(MainActivity.this);
+			//设置显示风格
+			proDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			//设置标题
+			proDialog.setTitle("慕课网");
+			//设置对话框里的文字信息
+			proDialog.setMessage("欢迎大家支持慕课网");
+			//设置图标
+			proDialog.setIcon(R.drawable.ic_launcher);
+			//设置最大进度
+			proDialog.setMax(100);
+			//设定初始化已经增长了的进度
+			proDialog.incrementProgressBy(40);
+			//指定进度条是明确显示进度的
+			proDialog.setIndeterminate(false);
+			//设定一个确认按钮
+			//proDialog.setButton(whichButton, text, listener);
+			proDialog.setButton(DialogInterface.BUTTON_POSITIVE, 
+					"确定", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int witch) {
+							
+							Toast.makeText(MainActivity.this, "欢迎大家支持慕课网",Toast.LENGTH_SHORT).show();
+						}
+					});
+			//是否可以通过返回按钮退出对话框
+			proDialog.setCancelable(true);
+			//把progressDialog显示出来
+			proDialog.show();
+
+
+其实每章的内容就是控件类型和控件属性方法有变化，实现形式几乎都是相同的。
+
+先安排好布局，
+
+再在MainActivity中声明要用到的控件，
+
+然后是初始化（代码与控件绑定或new资源对象），
+
+再对一些控件设置适配器或监听器。
+
+看完以后自己实现一遍对熟悉新控件十分有帮助，在有能力的情况下最好还是不要跟着视频敲效果会比较好。
+[Android] Material 风格的 Dialog 的使
+http://www.jianshu.com/p/6caffdbcd5db
+
+progressDialog.setCancelable(true); 默认的就是true,效果是点击弹出框之外的地方可以退出弹出框。
+
+progressDialog.setCancelable(false); 为fales时,效果是点击弹出框之外的地方可以也退出不了弹出框。
+
+自定义样式大概就是酱紫
+
+drawable下新建一个layer-list（层叠）的xml
+
+里面加三个item标签，便签id依次是background、secondaryProgress、progress。（背景、缓冲进度、当前进度）
+
+后两个item里要加clip标签（剪切，大概因为进度条会变长短而背景不用）。
+
+全部item里都加个shape标签（画图形）
+
+<corners /> 中设置图形的角
+
+<gradient /> 中设置图形的渐变色
+
+在要使用的控件中加属性 android：progressDrawable 引入xml
+
+（当前进度就是第一，缓冲进度就是第二，经常第一第二搞混于是就这么叫
+
+http://keeganlee.me/post/android/20150830
+style="@android:style/Widget.ProgressBar.Horizontal"//安卓自带的一个风格 水平横向进度条
+android:progressDrawable="@drawable/progress_bar"//设置progressDrawable覆盖自带风格（主要是用自定义的去覆盖自带的）
+
+WebView
+1. 简单的使用系统浏览器打开
+		uri = Uri.parse(url);
+		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		startActivity(intent);
+2. WebView加载页面
+webView.loadUrl(url);
+获取焦点
+webView.requestFocus();
+获取网络访问权限
+3. 使用应用中的webview
+        webView.loadUrl(url);
+        webView.setWebViewClient(new WebViewClient(){
+        	@Override
+        	public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        		// TODO Auto-generated method stub
+view.loadUrl(url);
+        		return true;
+//        		return super.shouldOverrideUrlLoading(view, url);
+        	}
+        });
+这里WebViewClient帮助WebView处理一些页面控制和请求通知
+4. 启用javaScript
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+5. 处理页面导航。返回上一个页面
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode == KeyEvent.KEYCODE_BACK) {
+    		if(webView.canGoBack()) {
+    			webView.goBack();
+    			return true;
+} else System.exit(0);
+}
+//return super.onKeyDown(keyCode, event);
+    }
+ 当调用Intent访问浏览器出现：No Activity found to handle Intent出错提示时
+
+Uri uri = uri.parse("www.baidu.com");
+
+Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+
+startActivity(intent);
+
+原因：网址前面未加http导致的，访问的网址必须是完整的网址，不能省略http。
+
+如何使用WebView:
+1.将WebView加入到你的应用
+2.使用WebView加载页面
+--要在WebView加载页面,使用loadUrl()
+--web资源:webView.loadUrl("http://www.baidu.com");
+(本地文件使用: webView.loadUrl("file:///android_asset/xxxx.html");)
+--使页面获得焦点: webView.requestFocus(); //否则有的输入框不会有响应
+3.获取网络访问权限:
+在它有效工作之前,你要保证你的应用能访问网络,要访问网络,需要在你的配置我就爱你中获取INTERNET权限:
+<uses-permission android:name="android.permission.INTERNET">
+
+在src/main下面，如果没有就右键main，new--folder--Assets folder
+
+处理页面导航：
+当用户点击一个WebView中的页面的链接时，通常是由默认的浏览器打开并加载目标URL的。然而，你可以在WebView中覆盖这一行为，那么链接就会在WebView中打开。
+webView.setWebViewClient（new WebViewClient()）;
+
+在WebView中使用Javascript:
+WebView webView = (WebView)findViewById(R.id.webView);
+WebSettings webSettings = webView.getSettings();
+webSettings.setJavaScriptEnabled(ture);
+
+后退与前进：
+-----当webView覆盖了URl加载，它会自动生成历史访问记录，可以通过goBack()或goForward（）向前或向后访问已访问的站点。
+----（代码：
+public boolean onKeyDown(int keyCode,KeyEvent event){
+if((keyCode= =KeyEvent.KEYCODE_BACK)&&myWebView.canGoBack(){
+webView.goBack();
+return true;
+}
+return super.onKeyDown(keyCode,even);
+}
+）
+        webView.setWebViewClient(new WebViewClient());
+
+    使用WebView加载页面，而不是浏览器
+		webView=(WebView) findViewById(R.id.webView1);
+		webView.loadUrl("http://www.baidu.com");
+		
+		webView.setWebViewClient(new WebViewClient(){
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url)
+			{
+				/*
+				 * 如果该方法返回值为true，则由该webView处理，而不是跳转到浏览器。
+				 * 官方解释：
+				 * @return True if the host application wants to leave the current WebView
+     *        		 and handle the url itself, otherwise return false.
+				 * */
+				view.loadUrl(url); //加载webView.loadUrl(url)中的url
+				return true; //重写该方法，让返回值为true；
+			}
+		});
+		WebSettings webSettings= webView.getSettings();
+		webSettings.setJavaScriptEnabled(true);   //设置javascript可用
+
+
+
+			//设置当用户加载页面时，执行。
+			@Override
+			public void onProgressChanged(WebView view, int newProgress)
+			{
+				//当加载页面时，进度条发生变化，自动调用
+				if(progressDialog==null)//第一次调用的时候初始化
+				{
+					progressDialog=new ProgressDialog(MainActivity.this);
+					progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+					progressDialog.show();
+				}
+				else
+				{
+					progressDialog.setProgress(newProgress);
+				}
+				if(newProgress==100)//说明加载完成
+				{
+					progressDialog.dismiss();
+					progressDialog=null;
+				}
+			}
+		});、
+
+		WebView加载进度条。  缓存的运用
+		webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);//设置缓冲机制，先加载缓冲其次网络加载。
+		webView.setWebChromeClient(new WebChromeClient(){
+
+安卓studio下打开文件浏览器：
+tools--》andorid--》android devices mointor
+你说的是不是eclipse 里DDMS中的file explorer？
+如果是，那么先保证模拟器是启动状态 或 连接真机 通过usb调试
+就可以看到了
+如果还是看不到，使用以下步骤
+在系统/system/bin里面可以发现没有ls文件，所以不能DDMS中调用file explorer
+解决办法：
+1。在Eclipse里面开模拟器，通过模拟器的DDMS->file explorer找到/system/bin, 导出toolbox替换真机相同目录下文件（可能需要ROOT explorer等软件）
+2。在真机/system/bin下做一个名为ls的连接文件指向toolbox。
+linux下可以直接用Link命令
+手机端开root explorer,在/system/bin下找到同样一个指向toolbox的连接文件，如cat，拷贝一份，重命名为ls即可！
+
+Frament基础 android3.0之后平板电脑 片段或者碎片 更加动态包含fragment之间交互 自己的文件和胜点周期  平板设备包含两个列表新闻的详情页每一个Frament的交互手机设备没有拆分成两个Frament有自己的独立的生命周期 模块化和可从用的
+Fragment在应用当中应当是一个模块化和可重用的组件，因为Fragment定义了他自己的布局，以及通过使用他自己的生命周期回调方法定义了他自己的行为，可以讲Fragment包含到多个Activity中。
+
+
+Fragment知识概要：
+
+（1）Fragment可以作为Activity界面的一部分组成出现
+（2）可以在一个Activity中同时出现多个Fragment，并且一个Fragment也可以在多个Activity中使用
+（3）在Activity运行过程中，可以添加、移除或者替换Fragment
+（4）Fragment可以响应自己的输入事件，并且有自己的生命周期，他们的生命周期会受宿主Activity的生命周期影响
+Fragment加载方式有两种：
+
+静态加载Fragment之 onCreateView()方法：
+
+Fragment第一次绘制它的用户界面的时候，系统会调用此方法，为了绘制Fragment的UI，此方法必须返回一个View,如果不显示UI，返回null即可
+1、静态加载：
+
+  1）在Activity的layout文件中声明Fragment，需要特别注意的是<fragment>中的android：name属性指定了再layout中实例化的Fragment类。
+
+  2）标识Fragment的方法：
+     android：id属性提供一个唯一ID
+     android：tag属性提供一个唯一字符串
+
+  <-转->  这节课的思路是现有一个MainActivity(主界面)，它对应的布局是Main.xml（RadioGroup，RadioButton）.
+之后老师创建了一个MainActivity2(静态加载Fragment的界面)，它对应的布局文件是Main2.xml(这个布局里添加了一个Fragment标签->静态加载)，并在这个xml文件中为Fragment标签定义了：name="MyFragment"属性，这个属性对应了Fragment标签对应的类--->这个MyFragment.java(继承Fragment)，并重写onCreatView().并为这个类声明(创建)了一个布局文件(fragment.xml)。并添加了一个TextView和Button.通过inflater.inflate()将布局文件添加到这个MyFragment中。---->回到MainActivity2通过setContextView()将main2.xml加载。
+最后回到MainActivity.java为第一个RadioButton添加点击事件(通过intent意图，跳转到MainActivity2).
+老师在MainActivity2中直接通过findViewById();将fragment.xml文件中的Button加载，这是因为通过层层加载，这个button已经存在于main2.xml中了。
+最后在清单文件中添加MainActivity2,并在main2.xml中为Fragment标签添加一个id
+1、MainActivity2中加载main2.xml的布局
+2、main2.xml中引用fragment.java作为<fragment/>的内容
+3、frament.java则通过inflater对fragment.xml进行转换以设置按钮内容
+Fragment应用。
+1. Layout中包含<fragment/>组件，其中重要属性为
+   android:name="com.example.fragmentdemo.MyFragment"  //为该fragment类的全限定名
+2. 定义类，继承Fragment类，与Fragment组件中的name值匹配。
+3. 重写onCreateView方法。
+   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+4. 返回view对象。 注：返回值就是该Fragment的Layout对象。
+其中inflater.inflate是将xml布局文件转化为对象。
+return inflater.inflate(R.layout.fragment_content, container, false);
+   三个参数分别为： 1.布局文件id， 2. 该布局文件父容器。 3.是否返回父容器
+5.加载layout布局即可。
+
+
+错误                                                                             java.lang.RuntimeException: Unable to start activity ComponentInfo{com.mtianyan.android_fragment/com.mtianyan.android_fragment.MainActivity2}: android.view.InflateException: Binary XML file line #6: Binary XML file line #6: Error inflating class fragment
+解决方案：将导入的fragment包换为android.app.fragments
+
+2、动态加载：
+  撰写代码将Fragment添加到一个Activity layout中
+add（）：添加一个Fragment（指定要添加的fragment和插入的View）
+
+与此类似的还有remove（）、替换（）
+
+处理Fragment事务：
+
+  1) 根据用户的交互情况，对Fragment进行添加、移除、替换，以及执行其他动作，提交给Activity的每一套变化被称作一个事务。
+
+FragmentManager fragmentManager = getFragmentManager();
+FragmentTransaction beginTransaction = fragmentManager.beginTransaction();
+
+2) 每一个事务都是同时执行一套变化，可以在一个事务中设置你所有想执行的变化，包括add（）、remove（）、replace（）、然后提交给Activity，必须调用commit（）方法
+
+如果允许用户通过按下BACK按键返回到前一个Fragment状态，调用commit（）之前可以加入addTobackStack（）方法。
+
+问题：
+动态Fragment的改变内容
+if(a>1){
+                    Button bt1 =(Button)findViewById(R.id.button);
+                    final TextView textView =(TextView)findViewById(R.id.textView);
+                    bt1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            textView.setText("改变");
+                        }
+                    });
+                }
+
+转
+Fragment的生命周期
+1、 onAttach();//当fragment被添加到activity中时会回调这个方法；只会调用一次
+2、 onCreate();//在fragment创建的时候回调这个方法；只会调用一次；
+3、 onCreateView()://每次创建都会绘制Fragment的View组件时调用该方法,相当于fragment绑定一个布局，布局文件转换成view返回回来；
+4、 onActivityCreated();//fragment所在的activity启动完成后调用；
+5、 onStart():启动Fragment时会被回调,
+6、 onResume()方法，调用onStart()方法后面一定会调用这个方法，恢复fragment时回调
+7、 onPause():暂停Fragment
+8、 onStop();//停止Fragment
+9、 onDestroyView():销毁Fragment所包含的View组件，与onCreateView相对应
+10、 onDestroy():销毁Fragment时会被回调
+11、 onDetach():Fragment从Activity中删除时回调这个方法，并且只调用一次
+启动fragment
+onAttach()->onCreate()->onCreateView()->onActivityCreated()->onStart()->onResume()
+屏幕锁屏
+onPause()->onStop()
+屏幕解锁
+onStart()->onResume()
+
+Fragment与Activity通信：
+1）Fragment可调用getActivity（）方法获取它所在的Activity
+2）Activity可调用FragmentManager的findFragmentById（）或findFragmentByTag（）方法获取Fragment
+
+3)Activity ----> Fragment:在Activity中创建Bundle数据包，并调用Fragment的setArguments（Bundle bundle） 方法
+
+4）Fragment -----> Activity：需要在Fragment中定义一个内部回调接口，再让包含该Fragment的Activity实现该回调接口。这样Fragment可调用该回调方法将数据传递给Activity
+
+Activity向Fragment传递数据
+1.实例化Bundle数据包。 使用putXXX(key,value);方式将键值对数据放入数据包。
+  		Bundle bundle=new Bundle();
+		bundle.putString("data", editText.getText().toString());
+2.对实例化的Fragment进行传值。使用setArguments(bundle)方式
+		CommunicationFragment fragment=new CommunicationFragment();
+		fragment.setArguments(bundle); //设置数据包
+3.在Fragment端，使用getArguments获取Bundle数据包。
+               Bundle bundle=getArguments();
+4.使用 bundle.getXXX(key); 使用该方式，通过键获取数据。
+       bundle.getString("data")
+在Fragment向Activity传值时，目的就是为了传值，关键两点是：1、在继承Activity的类里要有个有参数的方法接收传过来的值；2、想办法在继承Fragment的类中，将Activity对象找到，然后将该值赋予该对象中的方法里，从而就实现了传值。
+
+回调函数的解答：
+https://www.zhihu.com/question/19801131
+对于fragment，我个人的感觉是它应该像一个封装了特定功能的activity的组成模块（就像3d打印房子时用楼层组建房子），
+
+就像是用积木搭房子，直接用activity就像直接做出一整个房子模型，这个房子就只能是这个房子。
+
+而用fragment的话则像使用积木，可以根据需要组建成各种样子，可以很方便的复用，提高功能的封装性和代码可读性，易于功能维护和升级。从这一点上来看，使用fragment和使用接口在意义上十分相似呢。
+
+给“静态Fragment”传值
+1.通过Id获取Fragment
+		FragmentManager manager= getFragmentManager();
+		Fragment frag= manager.findFragmentById(R.id.frag);
+2.可以在Fragment定义一些private变量，通过set方法传值。
+3.应该也可以通过setArguments方法传值
+
+使用“回掉函数”机制，完成Fragment到Activity传值
+1.在Fragment中定义内部接口
+	public interface CallbackData{
+		public void callback(String content);
+	}
+inteface MyListent自定方法 传入数据接口定义好了之后在MainActiivti中onAttach调用的方法MyListent myListent 在lietent中调用烦啊
+
+一、使用ViewPager实现导航：
+
+1）ViewPager介绍：ViewPager可以使视图左右滑动
+2）加入ViewPager：
+   <android.suppor.v4.view.ViewPager
+   android:id="@+id/pager"
+   android:layout_width="wrap_content"
+   andriod:layout_height="wrap_content"
+   android:layout_gravity="center" >
+</android.support.v4.view.ViewPager>
+
+3)加载显示的页卡：将Layout布局转换为View对象
+  （1）LayoutInflater lf = getLayoutInflater().from(this);
+       lf.inflate(resource,root);
+  （2）View.inflate(context,resource,root);
+
+4)配置Adapter适配器：
+  （1）PagerAdapter 数据源：List<View>
+  （2）FragmentPagerAdapter 数据源：List<Fragment>
+  （3）FragmentStaePagerAdapter 数据源：List<Fragment>
+
+  ViewPager使用总结。
+1.在xml中增添</android.support.v4.view.ViewPager>
+2.新建多个layout，作为多个View
+3.使用View.inflate(,,)方法将layout.xml转化为View对象。
+		View view1= View.inflate(this, R.layout.view1, null);
+4.将多个View对象增添到 List<View>对象中。
+5.自定义PagerAdapter类。 继承“抽象类PagerAdapter”
+5.2. 为自定义的PagerAdapter类增添构造函数，要求将viewList传递进来。
+    public class MyPagerAdapter extends PagerAdapter
+6. 实现“未实现方法”和两个必要方法
+   6.1	public int getCount(){ //返回页卡（View）数量
+		return viewList.size();
+	}
+   6.2 	public boolean isViewFromObject(View arg0, Object arg1)
+        {  //判断View是否来自对象，用来给外部使用，判断两个view是否一致
+		return arg0==arg1;
+	}
+      6.3 	public Object instantiateItem(ViewGroup container, int position)     //实例化一个页卡。 
+	{
+		//将view增添到ViewGroup中
+		container.addView(viewList.get(position));
+		return viewList.get(position);
+	}
+      6.4  	public void destroyItem(ViewGroup container, int position, Object object)   //销毁一个页卡
+	{
+		container.removeView(viewList.get(position));
+	}
+7.设置适配器即可
+Adapter里面的常用方法：
+（1）getCount（）需要返回所有页面的数量
+（2）isViewFromObject（View arg0,Object arg1）判断视图是否由对象产生
+（3）instantiateItem（ViewGroup container，int position）实例化界面
+（4）destroyItem（ViewGroup container，int position，Object object）销毁页面
+（5）getPageTitle（int position）返回页面标题信息
+给ViewPager加标题。 PagerTabPager和PagerTitlePager的用法
+1.在ViewPager下增添“子标签” “android.support.v4.view.PagerTabStrip”
+2.新建一个List<String>来存储标题文本。
+3.将该文本传递到“自定义PagerAdapter”类下。
+4.自定义PagerAdapter重写getPageTitle方法。返回当前位置标题即可
+	public CharSequence getPageTitle(int position)
+	{
+		return tabList.get(position);
+	}
+5.通过获取PagerTab对象来改变标题样式。		
+		viewPager=(ViewPager) findViewById(R.id.viewPager);
+		pagerTabStrip=(PagerTabStrip) findViewById(R.id.tab);
+		pagerTabStrip.setAlpha(50);//设置透明度
+		pagerTabStrip.setBackgroundColor(Color.BLUE);
+		pagerTabStrip.setTabIndicatorColor(Color.RED); //设置指示器（下面的横线）的颜色。
+
+
+PagerTitleStrip和PagerTabStrip用法一样。区别如下：
+PagerTabStrip：
+1.点击上面的标题可以实现ViewPager的切换。
+2.选中的文字下方包含指引线
+3.可是设置是否显示全宽下划线（setDrawFullUnderline）
+PagerTitleStrip：
+1.点击上面的标题无反应。
+2.无上述描述。
+
+
+View中弄个LIstVIew
+http://www.imooc.com/qadetail/162732
+
+ViewPager“监听器”
+实现OnPageChangedListener;
+包含三个方法。
+			public void onPageSelected(int arg0)//常用
+			public void onPageScrolled(int arg0, float arg1, int arg2)
+		public void onPageScrollStateChanged(int arg0)
+
+
+1.OnPageChangeListener()——用来监控ViewPager滑动到第几页，position是从零开始计数；
+Toast.makeText(this,"当前是第"+(arg0+1)+"个页面", Toast.LENGTH_SHORT).show();
+2.在我们的工作中，使用Fragment填充ViewPager更加常见，即使用FragmentPagerAdapter或者FragmentStatePagerAdapter，因为Fragment比View拥有更加全面的生命周期，而如果我们使用PagerAdapter，就是直接使用View来填充ViewPager，这种做法不常用。
+
+切换页卡的监听器：
+1.OnPageChangListener，其中最常用的函数是onPageSelected(int arg0)；
+2.Fragment生命周期比较全，以fragment为资源的ViewPager比较好控制，适用于逻辑比较复杂的情况，如果只是为了展示则推荐以view为资源的viewPager
+
+setOnPageChangeListener() 方法已经被 AS 移除了，建议使用 addOnPageChangeListener() 方法。
+
+源码中说明如下：
+
+@deprecated Use {@link #addOnPageChangeListener(OnPageChangeListener)}
+
+* and {@link #removeOnPageChangeListener(OnPageChangeListener)} instead.
+
+11-1 使用ViewFlipper实现屏幕切换动画效果：
+
+1、ViewFlipper介绍：
+   android系统自带的一个多页面管理控件，它可以实现子界面的自动切换。
+2、为ViewFlipper加入View:
+   1)、静态导入：在layout布局文件中直接导入
+   2)、动态导入：addView（）方法：
+       flipper=(ViewFlipper) findViewById(R.id.filpper);
+       flipper.addView(getImageView(R.drawable.pic1));
+       flipper.addView(getImageView(R.drawable.pic2));
+       flipper.addView(getImageView(R.drawable.pic3));
+       flipper.addView(getImageView(R.drawable.pic4));
+
+3、ViewFlipper常用的方法：
+   1）、SetInAnimation：设置View进入屏幕时候使用的动画
+   2）、setOutAnimation：设置View退出屏幕时候使用的动画
+   3）、showNext：调用该函数来显示ViewFlipper里面的下一个View
+   4）、showPrevious：调用该函数来显示ViewFlipper里面的上一个View
+   5）、setFilpInterval：设置View之间切换的时间间隔
+   6）、startFlipping：使用上面设置的时间间隔来开始切换所有的View，切换会循环进行
+   7）、stopFlipping：停止View切换
+
+   打开android studio 右击res文件夹
+   添加动画文件夹
+
+   https://segmentfault.com/q/1010000003481469
+
+
+   谢谢老师！老师的动画透明度渐变逻辑有点问题，left_out里面应该这样写：
+
+android:fromAlpha="1"
+
+android:toAlpha="0.5"
+如果想滑动手势一起的话  ，当你获取手指啊的点击事件，关闭动画，离开后在开启动画
+
+12-1 使用ScrollView实现滚动效果：
+ 
+1、ScrollView介绍：
+   滚动视图是指当拥有很多内容，屏幕显示不完时，需要通过滚动来显示完整的视图
+
+2、ScrollView的种类：
+   HorizontalScrollView：水平滚动视图
+   ScrollView：垂直滚动视图
+
+   2）、隐藏ScrollView
+     （1）标签属性：
+          android：scrollbars="none"
+     （2）代码设置：
+          setHorizontalScrollBarEnabled（false）；隐藏横向ScrollView
+          setVerticalScrollBarEnabled（false）；隐藏纵向ScrollView
+
+   <ScrollView>里边只能有一个元素，如果使用多个元素，需要把元素都放在<LinearLayout>等布局标签中，然后把布局标签在放在<ScrollView>否则放多个元素会报错
+
+   3）、滚动条的监听器(setOnTouchListener)的使用：
+     
+    （1）、应用案例：判断ScrollView何时滑动到底部
+
+    “ScrollView监听事件”
+1.使用事件OnTouchListener。
+2.使用传入的视图view获取以下属性值。
+/*
+ * view.getHeight() 获取视图的总高度
+* view.getMeasuredHeight() 获取视图在当前屏幕所占的高度
+* view.getScrollY() 获取视图已经滑动的Y轴的高度
+* 所以。滑倒底部的公式可以使用
+* 视图的总高度<=视图在当前屏幕所占的高度+视图已经滑动的Y轴的高度
+ * */
+滑动到底部的公式：TextView的总高度<= 一屏幕的高度+滚动条的滚动距离
+scroll.getChuldAt(0).getMeasureHeight()<=scroll.height()+scroll.getSrollY()
+代码示例：
+scrollView.setOnTouchListener(new OnTouchListener()
+		{
+			
+			@Override
+			public boolean onTouch(View view, MotionEvent event)
+			{
+				if(event.getAction()==MotionEvent.ACTION_MOVE)
+				{
+					if(view.getScrollY()==0)
+					{
+						Log.i("my", "滑到顶部,y="+view.getScrollY());
+					}
+
+					if(view.getHeight()<=view.getMeasuredHeight()+view.getScrollY())
+					{
+						Log.i("my", "滑到底部");
+					}
+				}
+				return false;
+			}
+		});
+3）scrollTo和scrollBy区别：控制scrollView视图的位置
+“ScrollView”动态定位（不使用手滑动）
+使用两个方法。ScrollTo(int x,int y)和ScrollBy(int x,int y)
+
+区别如下：
+ 		 * scrollTo表示将视图滑动到某一个地方。
+		 * scrollBy 表示将视图想某个地方滑动多少
+
+可通过源码看出区别：
+scrollBy源码：
+    public void scrollBy(int x, int y) {
+        scrollTo(mScrollX + x, mScrollY + y);
+    }
+    小说阅读器记录位置
+
+    13-1 使用Gallery和ImageSwitcher制作图片浏览器
+  
+1、Gallery介绍：
+   我们有时候在手机上或PC上面看到动态的图片，可以通过鼠标或者手指触摸来移动它，产生动态的图片滚动效果，还可以根据你的点击或者触摸触发其他事件响应。同样的，在Android中也提供这种实现，这就是通过Gallery在UI上实现缩略图浏览器。
+
+2、适配器（BaseAdapter）中的重要方法：
+   （1）public int getCount（）----返回已定义的数据源的总数量
+   （2）public Object getItem（int position）
+        public long getItemId（int position）
+     ------告诉适配器取得目前容器中的数据ID和对象
+     （3）public View getView（int position，View convertView，ViewGrop parent) -----取得目前欲显的图像View，传入数组ID值使之读取与成像
+“Gallery”控件使用。
+1.实例化 2.增添适配器
+
+知识扩展：“自定义适配器”
+1. 从源码中可以看出ArrayAdapter和SimpleAdapter都继承了“抽象类BaseAdapter”
+2. 所以自定义适配器，继承BaseAdapter类
+3. 其中包括了方法一一解释。
+   3.1  public int getCount()
+	{
+		//返回适配器资源的数量
+		return resId.length;
+	}
+
+    3.2 public Object getItem(int position)
+	{
+		//返回适配器某位置的资源
+		return resId[position];
+	}
+
+      3.3 public long getItemId(int position)
+	{
+		//返回适配器某位置的Id，填写position即可
+		return position;
+	}
+
+       3.4
+	public View getView(int position, View convertView, ViewGroup parent)
+	{
+		//返回某位值的视图
+		ImageView imageView=new ImageView(context);
+		imageView.setBackgroundResource(resId[position]);
+		imageView.setLayoutParams(new Gallery.LayoutParams(400, 300));//设置view大小为400,300
+		imageView.setScaleType(ScaleType.FIT_XY);//设置尺寸适合xy
+		return imageView;
+	}
+
+4. 以上方法。其中getView比较灵活，其他代码基本比较固定。
+“ImageSwitch”使用方法
+1.在布局文件中定义ImageSwitch
+2.为其设置工厂。
+		imageSwitcher.setFactory(new ViewFactory()
+		{
+			@Override
+			public View makeView()
+			{
+				ImageView imageView=new ImageView(MainActivity.this);
+				imageView.setScaleType(ScaleType.FIT_CENTER); 
+				return imageView;
+			}
+		});
+
+      2.1 功能为“创建一个新的View增添到Switch中”
+      2.2 返回值就是创建的View对象。
+3.为其设置背景图片。
+imageSwitcher.setBackgroundResource(resId[position%resId.length]);
+
+知识扩扩展：
+一、图片浏览
+1.使用gallery实现OnItemSelectedListener方法。配合imageSwitch
+		gallery.setOnItemSelectedListener(new OnItemSelectedListener()
+		{
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+			{	imageSwitcher.setBackgroundResource(resId[position%resId.length]);
+			}
+
+二、图片无限循环。（即当浏览到最后一张时，再下一张就是第一张）
+1.修改适配器中的getCount属性。将数量设置极大
+return Integer.MAX_VALUE;
+2.修改getItem和getView。（即将使用到postion的地方改为求余值）
+resId[position%resId.length]
+
+3、ImageSwitcher介绍：
+   ImageSwitcher和ImageView的功能有点类似，他们都可以用于显示图片，区别在于ImageSwitcher的效果更炫，塔可以指定图片切换时的动画效果
+
+   4、ViewFactory的使用：
+   ImageSwitcher粗略的理解就是ImageView的选择器，它需要设置ViewFactory。一般情况下，我们让该ViewFactory的makeView（）方法返回ImageView
+
+   5、为ImageSwitcher加入动画：
+   imageSwitcher.setInAnimation(AnimationUtils.loadAnimation(this,android.R.anim.fade_in));
+
+inageSwitcher.setOutAnimation(AnimationUtils.loadAnimation(this,android.R.anim.fade_out));
+
+http://blog.csdn.net/gdecking/article/details/22407841
+左右循环无限滚动
+http://blog.csdn.net/lonelyroamer/article/details/7597638
+
+onItemSelected里的背景图片改成获取setImageResource就有效果了。
+时间: 2016-07-03 6
+Sorwby
+Sorwby
+首先, 修改成循环显示后, 适配器中的 getItem() 和 getItemId() 也应该做相应的改变
+
+其次, 如果使用setBackgroundResource(), 那么setScaleType() 和 setInAnimation() setOutAnimation根本不会起作用
+
+      应该使用setImageResource()
+
+      14-1 使用SeekBar制作可拖动的进度条：
+
+1、SeekBar介绍：
+   听歌的时候，我们常常喜欢快进或者退回某一时间段，听歌的时候，我们喜欢控件音量大小来听歌。SeekBar可以通过滑块的位置来标识数值，而且拖动条允许用户拖动滑块来改变进度值的大小。
+
+2、SeekBar的主要属性和方法：
+   1）、setMax ----设置SeekBar的最大数值
+   2）、setProgress ----设置SeekBar当前的数值
+   3）、setSecondaryProgress -----设置SeekBar的第二数值，即当前拖动条推荐的数值
+
+3、SeekBar的事件：
+   由于拖动条可以被用户控制。所以需要对其进行事件监听，这就需要实现SeekBar.OnSeekBarChangeListener接口。此接口共需要监听三个事件，分别是：
+  1）、数值改变 （onProgressChanged）
+  2）、开始拖动（onStarTrackingTouch）
+  3）、停止拖动（onStopTrackingTouch）
+  3、自定义SeekBar进度条：
+   android：progressDrawable = "@drawable/seekbar_img" （改变进度条的样式）
+ 
+   android: thumb = "@drawable/thumb" （改变滑块的样式）
+点不进去的样式内容可以在下面目录找到
+   F:\sdk\platforms\android-16\data\res\drawable
+
+   总结：Android常用布局样式：
+
+（1）LinearLayout（线性布局）：
+     特点：线性的 垂直的 水平的     
+
+（2）RelativeLayout（相对布局）：
+     特点：最灵活的
+
+（3）TableLayout（表格布局）：
+     特点：使用GridView代替
+
+（4）AbsoluteLayout（绝对布局）：不建议使用在自己的项目中
+
+（5）FrameLayout（帧布局）：
+     特点：布局叠加时使用
+
+  总结二：Android布局原则
+
+（1）尽量多使用LinearLayout（线性布局）和RelativeLayout（相对布局），不要使用AbsoluteLayout（绝对布局）
+
+（2）在布局层次一样的情况下，建议使用LinearLayout代替RelativeLayout，因为LinearLayout性能要稍高一点
+
+（3）将可复用的组件抽取出来并通过include标签使用
+
+
+
+（4）使用ViewStub标签来加载一些不常用的布局 
+
+（5）使用merge标签减少布局的嵌套层次
+
+“Include”标签的使用  （重用组件）
+
+公共标题案例：
+1.定义一个布局文件。作为公共的标题，这个是每个Layout都要加上的（需要重复使用）
+2.在其他layout中，使用“include”标签引用即可
+      <include layout="@layout/common_title" />
+3.其中被引用的layout中的控件依然可以被findViewById找到
+
+<!--转-->
+原来frameLayout里面一层有linearLayout，然后linearLayout再里面一层是progressBar和TextView，用了merge就是把linearLayout拿掉了一样的，直接frameLayout里面一层放progressBar和TextView，相当于少了一层。如果原来的看作大盒子里面放个中盒子，中盒子里面放小盒子，用了merge标签就相当于直接把中盒子扔了，省了一个盒子
+使用“Merge”
+一、 对于不需要使用任何布局的控件组（layout文件），可以使用“merge”标签代替。
+二、这样有利于减少布局嵌套
+（1）尽量多使用LinearLayout（线性布局）和RelativeLayout（相对布局），不要使用AbsoluteLayout（绝对布局）
+
+（2）在布局层次一样的情况下，建议使用LinearLayout代替RelativeLayout，因为LinearLayout性能要稍高一点
+
+（3）将可复用的组件抽取出来并通过include标签使用
+
+     1）、作用：将共用的组件抽取出来单独放到一个xml文件中，然后使用include标签导入共用布局。
+
+     2）、效果：提高UI的制作和复用效率，也能保证制作的UI布局更加规整和易维护。
+
+（4）使用ViewStub标签来加载一些不常用的布局 
+
+（5）使用merge标签减少布局的嵌套层次
+
+     1）、使用merge合并UI布局：
+       A：作用：合并UI布局，使用该标签能降低UI布局的嵌套层次
+       B：布局根结点是FrameLayout且不需要设置background或padding等属性，可以用merge代替。
+       C：某布局作为子布局被其他布局include时，使用merge当作该布局的顶节点，这样在被引入时顶结点会自动被忽略。
+
+       viewstub显示出来最好不要用inflate();最好用setVisibility(viewstub.VISIBLE)显示和用setVisibility(viewstub.GONE)隐藏，会少些麻烦
+       “ViewStub”隐藏内容使用
+作用：将暂时不现实的内容（layout布局）使用ViewStub引用。
+效果：不占用cpu和内存
+
+1.使用该属性引用 android:layout="@layout/viewstub_demo"
+2.使用该方法放入内存中 	viewStub.inflate(); 这样就可以显示了
+  如果再次调用该方法。程序会出异常
+
+  android：visibility属性控制隐藏
+
+  viewstub显示出来最好不要用inflate();最好用setVisibility(viewstub.VISIBLE)显示和用setVisibility(viewstub.GONE)隐藏，会少些麻烦
