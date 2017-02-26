@@ -1,0 +1,177 @@
+使用异步加载的原因：
+1.android单线程模型
+2.耗时操作阻塞UI线程
+
+异步加载最常用的两种方式：
+1.多线程\线程池
+2.AsyncTask
+
+http://www.imooc.com/api/teacher?type=4&num=30
+new URL(url).openStream()等同于url.openConnection().getInputStream()
+readStream(new URL(url).openStream())的功能与url.openConnection().getInputStream()相同
+可根据URL直接联网获取网络数据，简单粗暴！
+返回值类型为InputStream
+
+通过inputstream读取网络内容
+inputstream传入的为字节流，通过inputstreamreader将字节流转换为字符流
+通过bufferedreader将输入流读取出来
+readstream()读取数据流，获取到字符串
+readstream(new URL(url).openStream());这段代码的功能与url.openConnection().getInputStream()相同，可根据URL直接联网获取网络数据，简单，返回值类型为inputstream
+
+本节课目标：文艺方式重现BaseAdpter
+1、自定义Adpter继承BaseAdpter；
+2、定义变量：List<NewsBean>；LayoutInflater；
+3、重写构造函数NewsAdpter（Context context, List<NewsBean> data）。
+4、文艺方式重写getView()方法。 
+4.1、自定义类ViewHolder，映射相关的view对象
+
+异步加载——实现ListView图文混排逻辑总结
+
+第一步	onCreate中new一个NewsAsyncTask 将url传递给getJsonData 实现异步访问
+
+第二步 getJsonData将url转换为NewsBean对象
+
+第三步 onPostExecute讲NewsBean的数据传递给NewsAdapter
+
+第四步 NewsAdapter构造一个ListView数据源 并将数据源设置给ListView
+
+异步加载的第一层：通过AsyncTask访问网络，获取json或者XML字符串，然后解析他们产生若干object，将每个object放入到ListVIew中（adapter需要使用view holder pattern去写），AsyncTask中的访问网络获取json或者XML字符串，并且产生若干个object的工作就是在doInBackground()方法中进行的，所以这个方法总的来说就是用来准备数据源的
+
+inputStream in = new BufferedinputStream(conn.getInputStream());
+inputStream是个抽象类，通过实例化子类获取BufferedinputStream的对象。
+
+抽象类 URLConnection 是所有表示应用程序与 URL 之间通信链路的类的超类。该类的实例可以用来对由 URL 引用的资源进行读取和写入操作，HttpURLConnection是支持 HTTP 特定功能的 URLConnection
+实现异步加载(加载图片)的两种方式：多线程（Handler）和AsyncTask
+
+http://www.cnblogs.com/itstudent/p/3729117.html
+
+然而这里使用了异步机制，也就是说先返回ConvertView，再等异步线程修改，这是闪的本质！由于教程里使每个异步线程人工阻塞了1s，那么上来有8个异步线程在运行（编号1-8），如果1s之内下滑了ListView比如说下滑了8个，那么新更新的8个item还是用的以前的内存，【并且】又开启了8个异步线程（编号9-16）。因为预先设定了一个默认图片，所以先显示绿色的默认icon图片。然后1-8号异步线程运行完毕，更新ImageView（闪），紧跟着9-16异步线程运行完毕，又更新imageView（闪），最终显示正确结果。这就是下滑时先显示默认图片，再闪一下错误图片，最后闪一下正确图片的本质过程。
+ListView中加载图片时防止图片错位：
+1、给ImageView添加tag值，仅当tag值对应时才加载图片。
+2、使用成员将对象缓存
+
+From @xiaoc024
+我来说一下为什么会闪。这是【同时】使用ConvertView和异步机制造成的。一个屏幕一次显示8个item，当第9个item划进屏幕时，ListView对adapter说，返给我一个view，我要显示。adapter调用getView（）方法，由于使用了缓存机制，getView（）在初始化8个item以后所有返回的view（ConvertView）内存地址都是这8个中的。如果【不使用】异步机制加载图片，那么返回的这个ConvertView是被更新以后返给ListView使用的。效果是上滑屏幕没反应，等了半天，突然加载出来，但是不会闪。
+然而这里使用了异步机制，也就是说先返回ConvertView，再等异步线程修改，这是闪的本质！由于教程里使每个异步线程人工阻塞了1s，那么上来有8个异步线程在运行（编号1-8），如果1s之内下滑了ListView比如说下滑了8个，那么新更新的8个item还是用的以前的内存，【并且】又开启了8个异步线程（编号9-16）。因为预先设定了一个默认图片，所以先显示绿色的默认icon图片。然后1-8号异步线程运行完毕，更新ImageView（闪），紧跟着9-16异步线程运行完毕，又更新imageView（闪），最终显示正确结果。这就是下滑时先显示默认图片，再闪一下错误图片，最后闪一下正确图片的本质过程。
+如果给每个ImageView设置了tag以后，当1-8号异步线程运行完毕后，会发消息给handler，让他进行更新ui的操作，可是在1-8号线程发消息之前，9-16号线程已经更新了1-8和9-16共用的ImageView控件的tag,所以1-8号线程的消息虽然发给了handler，但是不满足条件，handler不会进行ui更新。
+
+p.s.完全理解这整个过程真的不容易，希望对你们有帮助。
+
+至于说“然而如果不显示ic_lanucher的话，图片依然会错误跳动”其实这个时候图片不是在跳动，而是正在做加载的工作，只是在加载工作完成之前，依然会显示先前加载的图片。
+比如1-8加载完成了，我要查看第9个项目，系统就将第1个项目放入缓存，然后加载第9个，然而加载第1个需要时间，系统就会默认地使用最近加入缓存的对象，也就是第1个项目的图片先抗一会，等待第1个项目加载完成接手。
+这应该是convertView的小弊端
+
+listview的缓存机制在加载图片会造成图片错位的现象   这是因为convertview   解决办法，
+给每个图片设置一个tag标签  然后再图片加载类中进行判断
+tag标签是否相等   TRUE的话在加载图片
+
+使用成员变量将对应数据进行缓存。
+
+通过跟踪程序的运行过程，Imgloader还不能放在VIEWHOlDER 里面。因为会被多次调用。为什么这样，还要进行更深入的研究
+
+以上内容为3-2使用thread多线程
+
+使用“LruCache”缓存机制
+
+案例：使用缓存机制存储加载的图片
+1.定义变量 private static LruCache<String, Bitmap> mLruCache;
+  两个泛型，以键值对方式进行存储缓存。
+2.实例化该变量。并且申请内存
+	long maxSize=Runtime.getRuntime().maxMemory();//获取最大内存
+		long cacheSize=maxSize/4;//申请最大内存的1/4作为缓存的最大内存。
+		mLruCache=new LruCache<String, Bitmap>((int) cacheSize)
+				{
+					@Override
+					protected int sizeOf(String key, Bitmap value)
+					{
+						//重写sizeOf方法
+						//该方法会在每次执行put时调用，用于获取存入值的内存大小。
+						return value.getByteCount();
+					}
+				};
+   2.1 其中，sizeOf方法必须重写。
+3.使用put方法。将缓存数据放入mLruCache变量中。
+mLruCache.put(urlStr, bitmap);
+4.使用get方法，从缓存mLruCache变量中获取缓存数据。
+mLruCache.get(urlStr);
+
+LruCache类中的sizeof方法用于获得所存入数据的大小，重写sizeof方法，指定所需的数据的大小，在每次存入缓存之内调用
+*******************************************
+创建方法存入cache和取出Cache
+通过与Bitmap相连的url返回所存取的BitMap
+提高ListView的加载效率：
+1、ListView滑动停止时才加载可见项
+2、滑动时取消所有加载项
+具体操作：
+1、adapter实现AbsListView。OnScrollListener
+2、重写他的两个方法，在状态改变方法中判断是否正在滑动，如果正在滑动取消所有加载项，如果停止滑动了，加载可见项。
+
+异步加载——图片加载优化
+1. 创建一个静态String[]将所有要显示的图片的地址保存起来
+public static String[] URLStrings;//用来保存当前所有需要显示的图片的url地址
+public NewsAdapter(Context context, List<NewsBean> mListData) {
+super();
+this.mList = mListData;
+mInflater = LayoutInflater.from(context);
+mImageLoader = new ImageLoader();
+URLStrings = new String[mListData.size()];
+for (int i = 0; i<mListData.size(); i++){
+URLStrings[i] = mListData.get(i).imageUrl;
+}}
+2. 创建一个方法，加载从start到end的所有图片
+public void loadImages(int start, int end){
+for (int i = start; i < end; i++){
+//因为URLStrings是静态的，所以可以直接使用
+String url = NewsAdapter.URLStrings[i];
+//从缓存中获取对应的图片并判断
+Bitmap bitmap = getBitmapFromCache(url);
+if(bitmap == null){
+NewsAsyncTask task = new NewsAsyncTask(url);
+task.execute(url);
+mTasks.add(task);
+}else {
+//从缓存中直接获取数据让iamgeView显示，这里imageView是从url的tag得来的
+ImageView imageView = (ImageView) mListView.findViewWithTag(url);
+imageView.setImageBitmap(bitmap);
+}}}
+3. 改写showImageByAsyncTask()，让显示图片的操作交给scroll的监听事件
+（如图）
+当bitmap不在缓存时，也不去加载图片
+
+ImageAdapter中implement ListView.onScoll...Listen..{//需要绑定自己的滚动监听事件
+listView.setOnScoll...(this);
+onScollStatuChage（）{//每次滚动时状态发生改变调用
+//加载start到end的图片
+//取得之间的图片url使用sync..Task去下载 并将task保存到Set<SyncTask>中，便于滚动时cancel()所有的下载，ImageView通过ListView.findViewWithTag(url)获取（在baseAdapter中设置过了，所以可以取到）；
+}
+onScoll(){//每次滚动都会执行
+//获取第一个和最后一个的num位置
+}
+}
+在syncTask的onPost..(){
+//在最后显示图片后需要移除Set中的此对象
+set<SyncTask>.remove(this);
+}
+
+
+滚动状态监听 当listView初始化的时候没有被调用 加一个boolean初始化的时候第一次启动OnScrol中是第一次启动可见条目当前列表是第一次显示人为的显示第一次显示之后调用滚动完成之后当LisView滑动的时候不会有任何的卡顿执行效率达到坐高
+
+我运行我的程序的时候崩溃了！哈哈！找了一下Bug,才发现我的图片URL不唯一(我没有使用慕课网的API，使用的自己搭建的简单后台，因此图片大都是重复的)。本节教程使用URL作为ListView中每一个Item中ImageView的唯一标识，那么当使用findViewByTag(url)的时候就会返回空。因此程序在第一次加载的时候不会设置图片，接下来滚动的时候就会出现空指针异常！
+            imageView = (ImageView) mListView.findViewWithTag(url);
+
+            Log.e("info", url + "    imageView value " + imageView);
+输出结果为：
+
+http://192.168.0.103:8080/Umooc/Image/1.png    imageView value null
+07-16 19:00:56.636 1761-1761/xq.listviewdemo E/info: http://192.168.0.103:8080/Umooc/Image/2.jpg    imageView value null
+07-16 19:00:56.636 1761-1761/xq.listviewdemo E/info: http://192.168.0.103:8080/Umooc/Image/1.png    imageView value null
+07-16 19:00:56.636 1761-1761/xq.listviewdemo E/info: http://192.168.0.103:8080/Umooc/Image/2.jpg    imageView value null
+
+解决办法：不再使用FindViewWithTag获取ImageView.而是获取Adapter中的ViewHolder中的ImageView.
+        View view = getView(position, null, null);
+        ViewHolder viewHolder = (ViewHolder) view.getTag();
+
+        当我们将加载图片的控制权交给了onScrollStateChanged()这个回调函数之后，我们会遇到一个问题，当程序刚启动的时候，我们的图片是不会被加载的，原因在于一开始的时候onScrollStateChanged()这个回调函数是不会被调用的，所以我们需要对开始的图片进行“预加载”。
+我们将“预加载”放在onScroll方法中去进行，因为这个回调会在ListView启动和绘制的时候被多次调用。为了保证我们的图片加载是在ListView被绘制出来之后进行的，我们需要判断visibleItemCount这个参数是否大于0。
+
+Android异步加载的总结。除了LruCache，我们还可以使用DiskLruCache这个第三方的类来实现“二级缓存”。异步加载不仅仅是获取网络资源，我们可以加所有耗时的操作都看成异步加载，所有通过耗时的操作获取的结果我们都可以通过缓存来提高效率，比如我们可以利用这里的LruCache和DiskLruCache（这个缓存一般是用于缓存从网络获取的图片，视频等大的资源，这个时候我们一般和LruCache结合使用），使用Cache有个缺点，就是我们不能保证我们的数据是实时的，所以在realtime需求高的应用中，我们不应该使用缓存。而对于本地资源，我们很少用缓存的，就算是操作SQLite数据库，我们也很少会用到LruCache，但是也有使用的。

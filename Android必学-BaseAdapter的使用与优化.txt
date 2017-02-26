@@ -1,0 +1,78 @@
+1.什么是数据适配器：通过数据适配器，我们可以将数据源和UI控件联系起来。
+2.数据适配器adapter的作用就是将多种多样的数据源适配成listView可以读取的模式。
+（1）降低程序的耦合性
+（2）容易扩展
+3.最常用的数据适配器：BaseAdapter
+
+ListView的显示和缓存机制
+总结来讲：
+需要才显示，显示完就被回收到缓冲池中。
+1. 屏幕上滑时，先将item1回收到View缓冲池中
+2. 新要显示的item8从View缓冲池中取出，并重新设置好item8所要显示的数据
+3. item8显示出来
+
+BaseAdapter基本结构
+public int getCoutnt():适配器中数据集中数据的个数
+public Object getItem(int position):获取数据集中与指定索引对应的数据项
+public long getItemId(int position):获取指定行对应的ID
+public View getView(int position,View convertView,ViewGroup parent):获取每一个Item的显示内容
+
+temBean的使用：
+我们通常创建一个Bean对象来表示listView中一行显示的数据。
+创建List<ItemBean> itemBeanList=new ArrayList<>();
+通过for循环来添加数组内容
+创建bean对象要显示的文字和bean 显示文字和标题 ItemTitle 初始化三个对象和文件对应在listViw中使用  list<itemBean > for itemBean.add根据方法传出参数 通过i进行区分 创建20条假的数据
+
+private List<ItemBean> mList;
+public MyAdapter(List<ItemBean> list){
+   mList=list;
+}
+通过构造方法将数据源与适配器构成了关联
+*创建一个ItemBean.java文件来封装ListView中的控件。
+并在封装文件中写构造函数对成员变量进行初始化。
+*创建数据源时，将数据源的类型直接定义为List<ItemBean>，List<ItemBean> itemBeanList=new ArrayList<>();再用循环给ListView的每一行进行赋值。、
+
+BaseAdapter中没有用到“缓存机制”的反例
+1.在getView方法中，只用到了position参数，忽略其他参数。
+2.每次都是重新创建view对象。
+3. 所以没有用到ListView的缓存机制
+
+layoutInflate 在构造方法中进行初始化传进来context对象初始化inflate对象 调用inflate方法 连个参数 imageView textView 找到布局中的控件 在数据源中取出数据 image.setImageResource(bean.get) bean.itemTitle bean.getItemContent return view返回 设置适配器setAdapter new Context 对象数据源和数据的绑定工作 listViwe listView缓存机制 getView中getView每次都创建新的对象 对资源的浪费 没有优化处理效率低
+
+使用ListView的缓存机制
+1.在适配器的getView方法中。不使用自定义的View对象。而是使用getView参数中提供的converView对象。
+原因：
+  将xml使用LayoutInflate转化为View对象是一个非常耗时的时间。如果系统已将xml转化为view对象（convertView），这个时候如果再自行创建View对象，将会无故的消耗时间。
+
+2.判断系统是否加载了view对象，如果没有，手动加载
+  if(converView==null)
+  {
+    mInflate=finflate(R.layout.item,null);
+  }
+
+其他知识要点：
+1. findViewById()是一个耗时的操作。每次findViewById系统都会去便利视图树。如果视图较多（视图树较大），将会消耗大量的时间。 这也是当前方法不妥的地方，需要改进
+
+在工程中 viewHolder避免两个耗时操作 converView 定义内部类viewHolder定义三个成员变量对应布局中的控件 getView方法中对于convetView==null实例化ViewHolder通过ViewHodller的成员变量 ViwHoder找到findViewbyid 保存到viwHolder setTag建立converviw和viwHodl的关系 converVewi.getTag 
+声明ViewHolder 当ConviewIvew保存起来建立关联关系通过成员变量找到资源避免了多次使用findViewbyid的多次调用
+http://android.amberfog.com/?p=296
+
+http://blog.csdn.net/chase_java/article/details/52972711
+
+对于一些细微的程序比较效率用获取系统纳秒时间方法
+
+关键代码：
+long start =System.nanoTime();
+...
+long end =System.nanoTime();
+long dValue=end-start;
+
+viewholder 作为findviewbyid的一个转接，避免系统大量的遍历提高效率。
+
+ViewHolder优化BaseAdapter思路 
+创建bean对象封装数据 
+在构造方法中初始化用于映射的数据list
+创建ViewHolder类 创建布局映射关系 
+判断ViewHolder为空则创建，
+并且设置tag否则通过tag来取出ViewHolder
+给viewHolder中的控件设置数据

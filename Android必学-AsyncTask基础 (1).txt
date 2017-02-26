@@ -1,0 +1,177 @@
+asyncTask异步任务 
+androud中的只有主线长更新UI 耗时操作不能放在主线程操作放在非主线程中执行 
+主线程子线程操作
+子线程中更新UI
+
+构建AsyncTask子类的参数
+AsyncTask<Params,Progress,Result>是一个抽象类，通常用于被继承，继承AsyncTask需要指定如下三个泛型参数：
+Params:启动任务时输入参数的类型。
+Progress：后台任务执行中返回进度值的类型。
+Result：后台执行任务完成后返回结果的类型
+
+“AsyncTask”使用总结
+1. 自定义一个类（MyAsyncTask）继承自AsyncTask类，需要给AsyncTask传入三个泛型，三个分别代表。
+   1.1 Params 执行线程时（asyncTask.execute(params)）传入的参数类型。
+   1.2 Progress 更新进度时(publishProgress(prograss)) 传入的参数类型。
+   1.3 Result doInbackground（线程）执行结束后的返回值，传给onPostExecute(result) 的参数类型。
+
+2.实现抽象方法。和一些其他的方法。主要为4个
+  2.1 onPreExecute  在线程执行之前执行（UI线程执行）
+  2.2 doInBackground 线程写在该方法中（这个方法中的内容是真正在线程中执行的，而不是在主线程中执行的，所以不能操作UI）
+  2.3 onPostExecute 线程执行之后执行。（这个方法是线程之后执行的，由主线程执行，用于操作UI）
+  2.4 onProgressUpdate 当使用publishProgress方法时，会调用该方法。操作UI来更新进度。
+
+3.实例化AsyncTask，调用asyncTask.exeucte(参数)。来执行线程
+
+Ctrl+O 实现override
+
+网络操作作为不稳定的废时操作，从android 4.0开始就被严禁放入主线程中
+通常采用在异步线程处理下载图像
+在UI线程设置图像
+
+ProgressBar XML属性 visibility="gone"可设置为默认状态下为隐藏
+VISIBLE：设置控件可见
+
+INVISIBLE：设置控件不可见
+
+GONE：设置控件隐藏
+
+而INVISIBLE和GONE的主要区别是：当控件visibility属性为INVISIBLE时，界面保留了view控件所占有的空间；而控件属性为GONE时，界面则不保留view控件所占有的空间。
+
+http://img.my.csdn.net/uploads/201504/12/1428806103_9476.png
+
+doInBackground方法传入的是一个可变长数组，在execute方法中可以传递不止一个参数，存入params数组中
+String url = params[0];//本例中只传入一个地址
+Bitmap bitmap = null;
+URLConnection connection;//定义网络连接对象
+InputStream is;//用于获取数据的输入流
+connection = new URL(url).openConnection();//获取网络连接对象，需要被try_catch
+is = connection.getInputStream();//获取输入流
+BufferedInputStream bis = new BufferedInputStream(is);
+bitmap = BitmapFactory.decodeStream(bis);//
+decodestream方法将输入流解析成bitmap
+is.close();//关闭输入流
+bis.close();
+
+ruturn bitmap;//将bitmap作为返回值返回给后面调用的方法 
+
+
+1. 在Activity中自定义“内部类”AsynckTask（因为要访问Activity获取到的资源）
+   1.1 三个类型分别为，String（用来传URL），Void（暂时不考虑进度条），Bitmap（用来返回图片）
+
+2.实现必要的几个方法
+3.在doInBackground方法中，执行异步的从网络获取图片任务
+  		protected Bitmap doInBackground(String... params)
+		{
+
+			String urlStr = params[0]; //将传递过来的url字符串提取出来。
+			URLConnection urlConnection = null;
+			InputStream inputStream = null;
+			Bitmap bitmap = null;
+			try
+			{
+				urlConnection = new URL(urlStr).openConnection();//获取Url连接。
+				inputStream = urlConnection.getInputStream();//从链接中获取图片数据流
+				bitmap = BitmapFactory.decodeStream(inputStream);//将图片数据流转化为Bitmap对象
+			} catch (MalformedURLException e)
+			{
+				e.printStackTrace();
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			} finally
+			{
+				try
+				{
+					inputStream.close();
+				} catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			return bitmap;
+		}
+4.在onPostExeucte(Bitmap result)方法中更新UI
+imageView.setVisibility(View.VISIBLE);
+imageView.setImageBitmap(result);
+
+通过OnProExcute方法和onPostExcute方法操作UI设置图像
+mProgressBar.setVisbility(View.VISIBLE)显示进度条
+onPostExcute(BitMap bitmap)//bitmap为doingbackground方法返回的一个bitmap
+在Main方法中，调用MyAsycTask的execute方法传入（URL）
+通过AsyncTask的实例调用execute方法就可以开启AsyncTask的异步操作，在execute方法中传入一个或多个参数作为我们doingbackground方法中所传进来的一个参数
+在AsyncTask的OnPreExecute方法中调用初始化的方法，在后台启动异步操作提示用户等待，调用真正的doingBackGround方法开始真正的异步处理，这里的整个方法都是现在子线程之中，在这个方法中进行所有的耗时操作，并将所要返回的值返回到我们所设定的值的类型中，在OnpostExecute方法中获得我们所返回的结果，onPostExcute方法也运行在主线程之中从而我们可以对UI进行操作，这就是AsyncTask所要调用的整个流程
+
+在Mainfest中开通所要访问的网络权限
+增加button调用
+************
+在doingbackGround方法中设置睡眠时间
+Thread.sleep(3000);
+
+
+http://www.cnblogs.com/caobotao/p/5020857.html
+
+“AsyncTask”中，onProgressUpdate（）的应用。 
+
+作用：更新异步任务的进度。（比如，在加载图片未完成之前，显示一个进度条，来给用户观看。）
+
+实例：模拟更新进度条
+1.自定义类继承AsnycTask类，将第二个泛型参数设置为Integer型。
+2.在doInBackground方法中，调用publishUpdate，传入一个Integer数值类型进去。作为当前进度。
+		protected Bitmap doInBackground(String... params)
+		{
+			for(int i=0;i<100;i++)
+			{
+				try
+				{
+					Thread.sleep(100);
+					publishProgress(i);
+				} catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
+                  }
+3. 系统会自动调用onProgressUpdate(Integer... values)，并将publishProgress传入的值传到这个参数里，使用values[]数组，即可提取出传入的值。
+  progressBar.setProgress(values[0]);//
+
+
+  “AsyncTask”线程取消。
+
+1.Activity开启的线程并不是和Activity绑定的。当Activity结束掉之后，并不会结束其开启的线程。
+2.当前Activity开启的线程，需要等之前线程运行结束后才能开始运行。
+
+3.可以使用cancel(true)//方法，设置线程状态为取消（但是这个只是设置状态，并不是真正的将线程停止）
+4.可以在doInbackground方法中，判断线程的状态，如果线程的状态为取消。就停止该线程。（使用该方法，将Activity和线程绑定）
+
+异步任务——AsyncTask
+AsyncTask默认情况下会等待前一个线程执行完毕后再执行下一个线程，要取消该机制，可以让AsyncTask和Activity的生命周期保持一致
+protected void onPause(){
+super.onPause();
+if(mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING){
+//只是发送了一个取消请求，将AsyncTask标记为cancel状态，但未真正取消线程的执行
+//实际上JAVA语音没办法粗暴地直接停止一个正在运行的线程
+mTask.cancel(true);
+}
+}
+
+所以需要在doInBackground方法和onProgressUpdate方法中增加isCancelled()方法进行判断，标记为cancel的，则跳出循环，尽快结束当前线程的剩余操作，开始下一个线程
+
+AsyncTask实现的机制：底层通过线程池来作用的，当我们一个线程没有执行完毕时，后面的线程是无法执行的；<br>
+调用cancel方法去cancel一个asynctask线程，并没有将这个线程直接停止掉，只是给这个asynctask发送了一个cancel请求，将它标识为cancel状态；<br>
+在java中是无法直接将一个线程粗暴地停止掉，我们必须等一个线程执行完毕后才能做后面的操作。（需通过状态值判断去跳出子线程的循环操作）
+
+只有doInBackground是在非UI线程中执行
+mytask!=null&&mytask.getStatus()== AsyncTask.Status.RUNNING
+ansystask 即使cancel设置为true 也不能立即取消，只是将状态设为取消
+故在doInBackground和onUpdatexx的时候检测isCancled()是不是true
+
+Ps【重点】：AsyncTask中，只有doInBackground方法是在其他线程中运行，而其他的重写方法都是在主线程中运行。（意味着：UI操作不能在非主线程中更新）
+
+AsyncTask中，只有doInBackground()方法运行在非主线程，其他三个方法运行在主线程，所以可以在doInBackground做异步操作，在其他三个方法中更新UI。
+正是因为有了onProgressUpdate()和onPostExcute()方法，才可以在异步处理的过程中更新UI。
+ http://blog.csdn.net/astro_gypsophila/article/details/54124759
+
+
+
+
