@@ -1,0 +1,66 @@
+cd /mnt
+sudo apt-get install nginx
+sudo apt-get update
+ps aux|grep nginx
+sudo apt-get install mysql-server
+ps aux|grep mysql
+mysql -u root -p
+show databases;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'ty158917' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+sudo service mysql restart
+sudo apt install python-pip
+pip install virtualenv
+pip install virtualenvwrapper
+vim ~/.bashrc
+
+export WORK_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/workspace
+source /home/ubuntu/.local/bin/virtualenvwrapper.sh
+
+source ~/.bashrc
+
+mkvirtualenv mxonline
+
+pip freeze> requirement.txt
+pip list -r requirements.txt
+
+sudo apt-get install libmysqlclient-dev
+
+pip install -i https://pypi.douban.com/simple  -r requirements.txt
+
+cd /mnt/Mxonline
+uwsgi -http:8000 -moudle MxOnline.wsgi
+
+mkdir conf
+vim uc_nginx.conf
+sudo cp uc_nginx.conf /etc/nginx/conf.d/
+
+http://projectsedu.com/2017/02/07/centos7-%E4%B8%8B%E9%80%9A%E8%BF%87nginx-uwsgi%E9%83%A8%E7%BD%B2django%E5%BA%94%E7%94%A8/
+
+# mysite_uwsgi.ini file
+[uwsgi]
+
+# Django-related settings
+# the base directory (full path)
+chdir           = /mnt/Mxonline
+# Django's wsgi file
+module          = MxOnline.wsgi
+# the virtualenv (full path)
+
+# process-related settings
+# master
+master          = true
+# maximum number of worker processes
+processes       = 10
+# the socket (use the full path to be safe
+socket          = 127.0.0.1:8000
+# ... with appropriate permissions - may be needed
+# chmod-socket    = 664
+# clear environment on exit
+vacuum          = true
+virtualenv = /home/ubuntu/.virtualenvs/mxonline
+
+
+pkill -f uwsgi

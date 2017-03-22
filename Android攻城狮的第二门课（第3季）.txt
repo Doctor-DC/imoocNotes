@@ -1,0 +1,153 @@
+1、android的四种数据存储方式：SharedPreferences,SQLite,Content Provider,File.
+2、SharedPreferences对象只能获取数据不能存储数据，要存储的话，步骤：
+①获取SharedPreferences对象
+②获得SharedPreferences.Editor对象
+③通过Editor接口的putXXX方法保存key—value
+
+四种数据存储的方式SharedPreferenced file sqlite contentProvider
+SharedPreference通常用来存储一些简单的配置信息 轻型的数据存储方式本质是基于XML文件存储key-value键值对数据存储Long int可以全部共享效率不是很高 dalvik虚拟 data/data
+用法只能用存储数据不能修改 获取sharedPreferce对象 获取Editor对象 通过editor对象的putxxx存放键值对 最后commit
+
+通过getSharedPreferences获取SharedPreferences对象
+通过定义Editor对象，编辑SharedPreference对象
+editor.putString 存入所需的文件
+putString 存入整数型数据
+getString获得存入的字符数据
+.commit();      表示提交操作
+
+SharedPreferences存
+SharedPreferences pref =getSharedPreferences("myPref", MODE_PRIVATE);
+String xname=edit1.getText().toString();
+String xpass=edit2.getText().toString();
+
+Editor editor = pref.edit();
+editor.putString("name",xname);
+editor.putString("pass",xpass);
+editor.commit();
+
+"SharedPreferences"存储数据应用
+1.实例化SharedPreferences对象，
+SharedPreferences sharedPreferences=getSharedPreferences("myAccount", MODE_PRIVATE);
+  1.1 使用Activity提供的方法。其中有两个参数
+      第一个代表 生成文件的名字（不存在就生成）
+      第二个代表 模式。比如私有，追加等。
+2.使用sharedPreferences对象获取Editor对象，存储数据
+	Editor editor= sharedPreferences.edit();
+3.使用 editor来存储数据。使用.putXXX(key,value)；来存数据。
+例：editor.putBoolean("isSave", true);
+4.使用editor调用commit方法。（否则将不会存储）
+		editor.commit();
+
+二、获取数据
+1、先获取sharedPreferences对象，同样使用
+SharedPreferences sharedPreferences=getSharedPreferences("myAccount", MODE_PRIVATE);
+2、使用该对象的getXXX(value,default)获取数据。
+sharedPreferences.getBoolean("isSave", false);
+   两个参数。1. 要获取对象的key值。 2.如果不存在，默认值。
+
+   SQLite 数据库存放数据 特点优点缺点 在嵌入式的操作系统中 嵌入式数据库类型 可以在主要的操作运行支持2T一单个文件的形式存在一B-Tree的数存储 特点轻量级 一个动态库单文件  独立性没有依赖 无序安装 隔离性 库平台之处众多的操作系统 多借口 支持众多语言有安全性 事物 sql的通过数据库上的独占性和共享锁 多个进程同一时间读取数据 只能有一个写入数据 对于数据库来讲 支持存储的数据类型 关于SQlit的数据类型 NNULL INTEGRE REAL TEXT BLOM 控制整型 浮点型 字符创 二进制  弱引用 
+使用须知 占用源小 性能好 没有可用于sqltie的网络服务器，
+
+1.轻量级
+2.独立性，没有依赖，无序安装
+3.隔离性 全部在一个文件夹系统
+4.跨平台 支持众多操作系统
+5.多语言接口 支持众多编程语言
+6.安全性 事物，通过独占性和共享锁来实现独立事务的处理，多个进程可以在同一个时间内从同一个数据库读取数据，但只有一个可以写入数据
+数据类型
+支持NULL，INTEGER，Real，text，blob数据类型
+一次代表，空值，整型值，浮点值，字符串类型，二进制对象，
+动态类型引用（弱引用）
+当某个值插入到数据库是，SQlite将会检查他的类型，如果该类型与关联的列不匹配，SQlite则会尝试将改制转换成该列的类型，如果不能转换，则该值将作为本身的类型储存
+使用须知：
+没有可用于SQlite的网络服务器，只能通过网络共享可能存在文件锁定或者性能问题。
+没有用户账户的概念，而是根据文件系统的共享设置
+
+SQLiteDatebase
+提供了一些管理SQLite数据库的类
+提供创建，删除，执行SQL命名，并执行其他常见的数据库管理任务的方法
+每个程序的数据库名称是唯一的
+2. SQLiteDatebase
+SQLiteDatabase liteDatabase = openOrCreateDatabase("user.db", MODE_PRIVATE, null);//user.db是我自己起的名字
+liteDatabase.execSQL("xxx"); //执行一个SQLite语句
+1)提供了一些管理SQLite数据库的类
+2)提供了创建、删除和执行SQL常见任务的方法
+3)每个程序的数据库名字是唯一的
+3. data目录
+4. Cursor类
+通过查询方法可以返回一个Cursor的对象
+Cursor cursor = liteDatabase.rawQuery("select * from usertb", null);     //查询数据库的所有数据
+1)注意Cursor对象的内存问题，如果Cursor的数据量特别大，特别是如果里面有Blob信息时，应该保证Cursor占用的内存及时的释放掉
+2)Cursor类的方法简介
+cursor.getInt(cursor.getColumnIndex("_id"))     //getColumnIndex(columnName)参数是列名，getInt()从这一列取出元素
+if(cursor != null) {
+        	while(cursor.moveToNext()) {
+        		Log.i(TAG, "_id: "+cursor.getInt(cursor.getColumnIndex("_id")));
+        		Log.i(TAG, "name: "+cursor.getString(cursor.getColumnIndex("name")));
+        		Log.i(TAG, "age: "+cursor.getInt(cursor.getColumnIndex("age")));
+        		Log.i(TAG, "sex: "+cursor.getString(cursor.getColumnIndex("sex")));
+        	}
+        }
+5. Cursor和SQLiteDatabase的释放
+cursor.close();
+liteDatabase.close();
+用完就释放。
+
+db.execSQL(string)执行任意的SQ语句，以原生的字符串执行
+db.insert（要加入那个表的表名，空列的默认值，MAP）
+db.delete(要删除的内容的表，删除的条件，产出条件的数组值（可以不要即null）)返回值是int，删除多少航。
+db.update（表明，contentvalue，更新的数段，条件）
+db.query（表名，要查的类，where，条件，分组，分组条件，，，，，）
+
+“SQLite”数据库的使用  一
+/*
+			 * @param myDB.db 数据库的名字，最好以".db"结尾，这样导出到外部的时候不需要再转格式
+			 * @param MODE_PREIVATE 设置模式，有私有（只能改应用程序访问），只读，读写等。
+			 * @param CursorFactory 游标工厂。 暂时不知道干什么的，给空即可。
+			 * */
+		 SQLiteDatabase sqLiteDatabase= openOrCreateDatabase("myDB.db", MODE_PRIVATE, null);//打开或者创建数据库
+		 /*
+		  * 执行sql语句
+		  * 创建数据库表，使用 create table if not exists tablename 的形式，判断表是否存在，如果存在，则不创建
+		  * 注意：主键建议使用"_"开头，如"_id"，因为在以后的ListView开发中，貌似只能识别"_"开头的主键
+		  * */
+		 sqLiteDatabase.execSQL("create table if not exists User(_id integer primary key autoincrement, name text)");//执行sql语句
+		 
+		 /*
+		  * 插入数据，必须加into，否则报错
+		  * */
+		 sqLiteDatabase.execSQL("insert into User (name) values('张三')");
+
+		 “SQLite”数据库的应用 二
+	 Cursor cursor=sqLiteDatabase.rawQuery("select *from User", null); //查询数据，以游标形式,第二个参数代表条件
+		 if(cursor!=null)
+		 {
+			 //表示查询成功
+			 while(cursor.moveToNext())
+			 {
+				 /*
+				  * 1.cursor.getXXX(index)获取数据。
+				  * 2.使用cursor.getColumnIndex(String) 获取某列的索引值
+				  * 1.2配合使用，可以获取某行某列的具体数据
+				  * */
+				 Log.i("my", ""+cursor.getInt(cursor.getColumnIndex("_id"))) ; 
+				 Log.i("my", ""+cursor.getString(cursor.getColumnIndex("name"))) ; 
+				 Log.i("my", "-----------------");
+			 }
+		 }
+		 
+		 sqLiteDatabase.close(); //关闭数据库连接。释放资源。
+
+		 .update();更改数据库数据
+.delete();删除数据库里的数据
+.query();查询数据库的数据
+Cursor c=db.query("stutb",null,"_id>?",new String[]{"0"},null,null,"name");
+if(c!=null){
+  String [] columns=c.getColumnNames();//获取数据
+}
+
+ContentValues
+用于存储一组可以被ContentResolver处理的值
+例如：
+//类似于HashMap key value
+ContentValues values=new ContentValues();

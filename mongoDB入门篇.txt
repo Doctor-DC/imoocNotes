@@ -1,0 +1,120 @@
+/**  window版 环境配置   **/
+
+ 1.msi交互式安装。
+
+ 2.新建data 文件。（自定义位置，用于存放数据）
+
+ 3.添加环境变量：D:\MongoDB\server\3.2\bin 
+
+ 4.启动MongoDB服务.
+
+   cmd : Mongod --dbpath D:\MongoDB\data   // 指定数据路径
+
+ 5.判断服务器是否开启：
+
+   浏览器访问：http://localhost:27017/
+
+  （默认端口：27017 ）
+
+ 6.设置Mongodb 启动方式。
+
+  方式一：
+
+   制作bat 启动文件。
+方式二：
+
+   将MongoDB设置成windows服务，开机自动启动。
+
+   1.在data文件夹中新建log 文件夹（存放日志文件）。
+
+   2.在log文件夹中新建mongodb.log 文件。
+
+   3.在data 的同级目录新建 mongo.config 文件。
+
+   4.编辑config 文件：（加入下列代码）
+
+     dbpath=D:\mongodb\data
+
+     logpath=D:\mongodb\data\log\mongodb.log
+5.用管理员身份打开cmd
+
+     mongod --config D:\mongodb\mongo.config --install 
+
+   6.启动服务
+
+     net start mongodb
+
+   7.关闭服务
+
+     net stop mongodb
+
+   8.卸载服务
+
+     sc.exe delete MongoDB
+
+连接MongoDB服务器方式
+1.mongo：
+拷贝mongo到bin目录下方便使用：cp ../mongo-r2.6.5/mongo bin/
+执行./bin/mongo --help:查看使用说明
+./bin/mongo 127.0.0.1:12345/test; #出现">"说明连接成功
+2.驱动连接
+
+关闭数据库很简单，首先切换到admin数据库才有权限：
+方法一：
+>use admin
+>db.shutdownServer()
+方法二：
+kill -15 xxx 或者 kill xxx 不能使用-9
+
+tail -f logs/mongdb.log #查看日志
+numactl --interleave=all bin/mongod -f conf/mongod.conf #消除警告，NUMA
+
+1：cd进入某个文件夹<br>
+2：cd..进入目前文件夹的上一级文件夹<br>
+3：cd.进入目前文件夹的上两级文件夹<br>
+4：cd/进入根文件夹<br>
+<br>
+5：ls列出文件夹的内容<br>
+6：tail 文件名 查看文件的详细内容<br>
+7：cp 源文件夹 目标文件夹 文件的拷贝
+
+8：./bin/mongo --help 查看mongo的使用说明
+
+9：./bin/mongo 127.0.0.1:12345/test 使用mongo客户端连接数据库的名利使用方式 输入完命令回车，看到一个>则表示我们已经连接到了MongoDB数据库
+10：关闭MongoDB 一种方式是：db.shutdownServer() 另一种方式是使用kill -15 或者 kill 特殊情况可以使用kill -9
+
+11：ues admin 使用admin数据库 才能够使用db.shutdownServer()命令
+12：ctrl+c退出
+13：tail -f 文件名 查看文件最后部分
+
+连接MongoDB的方式有两种：
+1：使用mongo客户端
+2：使用各种驱动连接
+
+这一节已经讲到，如何搭建一个MongoDB服务器、怎么连接这个服务器、出现问题怎么解决、怎么查看日志文件、怎么关闭连接的服务器等内容。
+
+
+一般增删改查（dbname库名）
+show dbs 查看库集合
+use imooc  切换到指定库集
+show collections 查看当前库的集的列表
+db.dropDatabase() 删除当前的库集
+db.imooc_collection.insert({x:2,_id=1})  插入json数据
+db.imooc_collection.find({x:1})  查看指定集内的json数据
+db.imooc_collection.find().count()  查看指定集内的数据的数量
+db.imooc_collection.find().skip(number).limit(number).sort(x) 查看指定集内数据并限制返回多少条并且
+
+mongodb支持多个JS语法插入数据:
+for(i=3;i<100;i++)db.user.insert({x:i})
+
+数据更新：
+db.collection.update({x:1},{x:999})
+db.collection.insert({x:100,y:100,z:100})
+db.collection.update({z:100},{$set:{y:99}})局部更新 在$set中的内容会被更新，不在的会保持原值
+
+更新
+db.表名.update(条件,修改条件)  例:db.imocc_collection.update({x:1},{x:2}})
+db.表名.update(条件,{$set:修改条件})
+当只想修改一部分数据时,使用$set符号操作,只操作$set中的数据,其他保持不变
+
+db.collection.update({原表列:原列值},{表列:列值},true)更新不存在的数据->会插入一条记录

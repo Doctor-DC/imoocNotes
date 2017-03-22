@@ -1,0 +1,29 @@
+Silence_mxy
+D3
+为数据可视化而生
+代码是由javascript写的
+在浏览器上会发挥完全的特性
+下载地址：https://github.com/mbostock/d3
+代码是由JAVASCRIPT而写。 开源。创造的热情。
+1.select
+2.selectAll
+3.append
+4.读取和使用数据
+
+1-线性图表
+
+web容器
+图表线
+加图注
+
+
+【D3图表在html中的结构】
+svg:可伸缩适量图像
+g:一个分组的元素，相当于html中的div元素；图表都放到g元素中
+
+线型图表：
+  1.select 选择dom元素
+  2.append
+  3.attr 设置属性
+  4.g(group) 
+  5.transform 偏移量
