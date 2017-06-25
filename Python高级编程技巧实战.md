@@ -17,72 +17,52 @@
 2.2 如何使用生成器函数实现可迭代对象
 2.3 如何进行反向迭代以及如何实现反向迭代
 2.4 如何对迭代器做切片操作实现对于文本的切片操作?
-**实际案例**
->有某个人文本文件，我们想读取某范围的内容：如100-300行之间的内容
-,python中文本文件是一个可迭代对象，我们是否可以使用类似于列表切片
-的方式得到一个100 - 300 行文件内容的生成器?
-```
-f = open('/var/mtianyan.txt')
-f[100:300] #可以吗？
-```
+2.5 如何在一个for语句中迭代多个可迭代队象(并行&串行)？
+实际案例:
+>1. 某班学生期末考试成绩，语文，数学，英语分布存储在三个列表当中
+    同时迭代三个列表，计算每个学生的总分
+2. 某年级有四个班，某次考试每班英语成绩分布存储在4个列表中，依次迭代每个列表，统计全年级成绩高于90分的人
+
+解决方案:
+> 并行，采用内置函数zip，它能将多个长度一样的可迭代对象合并，每次迭代返回一个元组
+串行，采用标准库里的itertools.chain，它能将多个可迭代对象链接
 
 普通做法:
 ```python
 
-f = open('guess.py')
-# 'file' object has no attribute '__getitem__'
-f[1:8]
-print dir(f)
+from random import randint
+math = [randint(60,100) for _ in xrange(40)]
+english = [randint(60,100) for _ in xrange(40)]
 
-
-lines = f.readlines()
-
-print lines[1:3]
-
-# 使用seek操作使读取文件的游标返回到头部
-f.seek(0)
-for line in f:
-    print line
+for i in xrange(len(math)):
+    print math[i] + english[i]
 
 ```
-高级做法:
+zip实现并行迭代
 ```python
-from itertools import islice
+from random import randint
+math = [randint(60,100) for _ in xrange(40)]
+english = [randint(60,100) for _ in xrange(40)]
+# zip 
 
-# print help(islice)
+print zip([1,2,3],['a','b','c'],[7,8,9])
+# out:[(1, 'a', 7), (2, 'b', 8), (3, 'c', 9)]
 
-# islice(iterable, [start,] stop [, step])
-# 
-f = open('guess.py')
-print islice(f, 1, 3)
-
-# 打印一行到三行
-for line in islice(f, 1, 3):
-    print line
-# 打印前3行
-for line in islice(f, 3):
-    print line
-# 打印1到结尾
-for line in islice(f, 1, None):
-    print line
-# 负不支持
-# for line in islice(f, 1, -1):
-#   print line
-
-l = range(20)
-print l
-
-t = iter(l)
-
-for x in islice(t,5,10):
-    print x
-print '*'*20
-# 它会消耗迭代器对象，因此下面的for循环会从10开始
-for x in t:
-    print x
-
+for m,e in zip(math,english):
+    print m+e
 ```
-
+itertools.chain实现多个可迭代对象的链接
+```python
+from random import randint
+from itertools import chain
+c1 = [randint(60,100) for _ in xrange(40)]
+c2 = [randint(60,100) for _ in xrange(42)]
+count = 0
+for s in chain(c1,c2):
+    if s > 90:
+        count +=1
+print count
+```
 
 ##3. 字符串处理
 

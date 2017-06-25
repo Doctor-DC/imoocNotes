@@ -324,3 +324,28 @@
 
 # q2 = pickle.load(open('history'))
 # print q2
+
+from random import randint
+math = [randint(60,100) for _ in xrange(40)]
+english = [randint(60,100) for _ in xrange(40)]
+
+for i in xrange(len(math)):
+	print math[i] + english[i]
+
+# zip 
+
+print zip([1,2,3],['a','b','c'],[7,8,9])
+# out:[(1, 'a', 7), (2, 'b', 8), (3, 'c', 9)]
+
+for m,e in zip(math,english):
+	print m+e
+
+from random import randint
+from itertools import chain
+c1 = [randint(60,100) for _ in xrange(40)]
+c2 = [randint(60,100) for _ in xrange(42)]
+count = 0
+for s in chain(c1,c2):
+	if s > 90:
+		count +=1
+print count
